@@ -1,30 +1,30 @@
 # Banking Managment Software
 ## The folder structure to follow:
-.
-└── ProjectRoot/
-    ├── src/
-    │   ├── main/
-    │   │   └── java/
-    │   │       └── com/
-    │   │           ├── business/
-    │   │           │   ├── models/
-    │   │           │   │   └── ...
-    │   │           │   └── services/
-    │   │           │       └── ...
-    │   │           ├── database/
-    │   │           │   ├── embededdables/
-    │   │           │   │   └── ...
-    │   │           │   ├── entities/
-    │   │           │   │   └── ...
-    │   │           │   └── repositories/
-    │   │           │       └── ...
-    │   │           └── presentation/
-    │   │               ├── controller/
-    │   │               │   └── ...
-    │   │               └── views/
-    │   │                   └── ...
-    │   └── test/
-    │       └── java/
-    │           └── com/
-    │               └── ...
-    └── target
+.<br>
+└── ProjectRoot/<br>
+    ├── src/<br>
+    │   ├── main/<br>
+    │   │   └── java/<br>
+    │   │       └── com/<br>
+    │   │           ├── business/<br>
+    │   │           │   ├── models/<br>
+    │   │           │   │   └── ...<br>
+    │   │           │   └── services/<br>
+    │   │           │       └── ...<br>
+    │   │           ├── database/<br>
+    │   │           │   ├── embededdables/<br>
+    │   │           │   │   └── ...<br>
+    │   │           │   ├── entities/<br>
+    │   │           │   │   └── ...<br>
+    │   │           │   └── repositories/<br>
+    │   │           │       └── ...<br>
+    │   │           └── presentation/<br>
+    │   │               ├── controller/<br>
+    │   │               │   └── ...<br>
+    │   │               └── views/<br>
+    │   │                   └── ...<br>
+    │   └── test/<br>
+    │       └── java/<br>
+    │           └── com/<br>
+    │               └── ...<br>
+    └── target<br>
