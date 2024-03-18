@@ -6,14 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class TransactionStatusId implements Serializable{
+public class TransactionHistoryId implements Serializable{
     @Column(name = "withdrawal_id")
     private Long withdrawalId;
 
     @Column(name = "deposit_id")
     private Long depositId;
 
-    public TransactionStatusId(Long withdrawalId, Long depositId) {
+    public TransactionHistoryId(Long withdrawalId, Long depositId) {
         this.withdrawalId = withdrawalId;
         this.depositId = depositId;
     }
@@ -51,7 +51,7 @@ public class TransactionStatusId implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        TransactionStatusId other = (TransactionStatusId) obj;
+        TransactionHistoryId other = (TransactionHistoryId) obj;
         if (withdrawalId == null) {
             if (other.withdrawalId != null)
                 return false;
