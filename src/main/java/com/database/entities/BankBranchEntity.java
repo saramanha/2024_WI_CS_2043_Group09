@@ -28,6 +28,10 @@ public class BankBranchEntity {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public AddressEntity getAddress() {
         return address;
     }
