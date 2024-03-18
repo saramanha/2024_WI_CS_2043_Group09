@@ -11,7 +11,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>com.database.Main</mainClass>
+                    <mainClass>com.proj.controller.Main</mainClass>
                 </configuration>
             </plugin>
 
@@ -21,7 +21,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.database.Main</mainClass>
+                            <mainClass>com.proj.controller.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -59,7 +59,7 @@
         </dependency>
     </dependencies>
 
-    <groupId>com.database</groupId>
+    <groupId>com.proj</groupId>
     <artifactId>demo_database_seg</artifactId>
     <version>1.0-SNAPSHOT</version>
 
