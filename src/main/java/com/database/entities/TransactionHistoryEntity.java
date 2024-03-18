@@ -41,4 +41,60 @@ public class TransactionHistoryEntity {
 
     @Column(name = "transaction_closure_date_time")
     private LocalDateTime transactionClosureDateTime;
+
+    public TransactionHistoryId getId() {
+        return id;
+    }
+
+    public void setId(TransactionHistoryId id) {
+        this.id = id;
+    }
+
+    public DepositHistoryEntity getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(DepositHistoryEntity deposit) {
+        this.deposit = deposit;
+    }
+
+    public WithdrawalHistoryEntity getWithdrawal() {
+        return withdrawal;
+    }
+
+    public void setWithdrawal(WithdrawalHistoryEntity withdrawal) {
+        this.withdrawal = withdrawal;
+    }
+
+    public TransactionTypeEntity getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionTypeEntity transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public TransactionStatusEntity getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(TransactionStatusEntity transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public LocalDateTime getTransactionInitiationDateTime() {
+        return transactionInitiationDateTime;
+    }
+
+    public void setTransactionInitiationDateTime(LocalDateTime transactionInitiationDateTime) {
+        this.transactionInitiationDateTime = transactionInitiationDateTime;
+    }
+
+    public LocalDateTime getTransactionClosureDateTime() {
+        return transactionClosureDateTime;
+    }
+
+    public void setTransactionClosureDateTime(LocalDateTime transactionClosureDateTime) {
+        this.transactionClosureDateTime = transactionClosureDateTime;
+    }
 }
