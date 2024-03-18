@@ -8,11 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "role")
-public class RoleEntity {
+@Table(name = "gender")
+public class GenderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id", nullable = false, updatable = false)
+    @Column(name = "gender_id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)
