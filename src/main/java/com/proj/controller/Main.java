@@ -1,9 +1,9 @@
 package com.proj.controller;
 
-import com.proj.view.TestView;
+import com.proj.view.HibernateTest;
 
 public class Main {
     public static void main(String[] args) {
-        TestView.printHelloWorld();
+        HibernateTest.run();
     }
 }
