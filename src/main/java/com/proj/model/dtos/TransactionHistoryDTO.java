@@ -3,31 +3,12 @@ package com.proj.model.dtos;
 import java.time.LocalDateTime;
 
 public class TransactionHistoryDTO {
-    
     private TransactionHistoryIdDTO id;
-
-    
-    
-    
     private DepositHistoryDTO deposit;
-
-    
-    
-    
     private WithdrawalHistoryDTO withdrawal;
-
-    
-    
     private TransactionTypeDTO transactionType;
-
-    
-    
     private TransactionStatusDTO transactionStatus;
-
-    
     private LocalDateTime transactionInitiationDateTime;
-
-    
     private LocalDateTime transactionClosureDateTime;
 
     public TransactionHistoryIdDTO getId() {

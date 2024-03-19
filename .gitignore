@@ -4,3 +4,4 @@ TODO
 derby.log
 myDatabase
 target
+*.class

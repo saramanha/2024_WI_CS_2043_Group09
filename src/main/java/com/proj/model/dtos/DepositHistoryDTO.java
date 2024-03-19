@@ -6,34 +6,13 @@ import java.time.LocalDateTime;
 
 
 public class DepositHistoryDTO {
-    
-    
-    
     private Long id;
-
-    
-    
     private AgentInformationDTO agent;
-
-    
-    
     private AccountInformationDTO accountInformation;
-
-    
-    
     private TransactionStatusDTO transactionStatus;
-    
-    
     private BigDecimal sumInitial;
-
-    
-    
     private CurrencyDTO depositCurrency;
-
-    
     private BigDecimal sumConverted;
-
-    
     private LocalDateTime dateTimeInitiated;
 
     public Long getId() {
