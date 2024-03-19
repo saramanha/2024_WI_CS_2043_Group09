@@ -35,11 +35,11 @@ public class AgentInformationEntity {
     private LocalDate dateOfRegistration;
 
     @ManyToOne
-    @JoinColumn(name = "address_id", nullable = false)
+    @JoinColumn(name = "primary_address_id", nullable = false)
     private AddressEntity primaryAddress;
 
     @ManyToOne
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "secondary_address_id")
     private AddressEntity secondaryAddress;
 
     @Column(name = "email")
