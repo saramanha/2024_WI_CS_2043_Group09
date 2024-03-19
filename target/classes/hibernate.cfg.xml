@@ -5,7 +5,7 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
-        <property name="connection.url">jdbc:derby:memory:myDb;create=true</property>
+        <property name="connection.url">jdbc:derby:directory:myDatabase;create=true</property>
         <property name="connection.username">user</property>
         <property name="connection.password">pass</property>
 

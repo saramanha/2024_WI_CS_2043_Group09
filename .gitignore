@@ -3,4 +3,4 @@ TODO
 .vscode
 derby.log
 myDatabase
-target/
+target
