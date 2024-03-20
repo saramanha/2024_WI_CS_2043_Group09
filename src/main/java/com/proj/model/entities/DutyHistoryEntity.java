@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 @Entity
 @Table(name = "duty_history")
@@ -25,14 +26,14 @@ public class DutyHistoryEntity {
     @Column(name = "date_time_signoff")
     private LocalDateTime dateTimeSignoff;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "bank_branch_id")
     private BankBranchEntity bankBranch;
 
     @Column(name = "duty_notes")
     private String dutyNotes;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "agent_id")
     private AgentInformationEntity agent;
 

@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 import com.proj.model.embeddables.TransactionHistoryId;
 
@@ -18,21 +19,21 @@ public class TransactionHistoryEntity {
     @EmbeddedId
     private TransactionHistoryId id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("depositId")
     @JoinColumn(name = "deposit_id")
     private DepositHistoryEntity deposit;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("withdrawalId")
     @JoinColumn(name = "withdrawal_id")
     private WithdrawalHistoryEntity withdrawal;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "transaction_type_id")
     private TransactionTypeEntity transactionType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "transaction_status_id")
     private TransactionStatusEntity transactionStatus;
 

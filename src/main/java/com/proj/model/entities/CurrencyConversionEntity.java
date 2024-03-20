@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 import com.proj.model.embeddables.CurrencyConversionId;
 
@@ -18,12 +19,12 @@ public class CurrencyConversionEntity {
     @EmbeddedId
     private CurrencyConversionId id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("fromCurrencyId")
     @JoinColumn(name = "from_currency_id")
     private CurrencyEntity fromCurrency;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("toCurrencyId")
     @JoinColumn(name = "to_currency_id")
     private CurrencyEntity toCurrency;

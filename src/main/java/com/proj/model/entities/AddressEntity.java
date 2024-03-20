@@ -1,5 +1,6 @@
 package com.proj.model.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,15 +27,15 @@ public class AddressEntity {
     @Column(name = "street_name", nullable = false)
     private String streetName;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_id")
     private CityEntity city;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "province_id")
     private ProvinceEntity province;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
     private CountryEntity country;
 

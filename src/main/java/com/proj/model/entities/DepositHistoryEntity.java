@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 @Entity
 @Table(name = "deposit_history")
@@ -20,22 +21,22 @@ public class DepositHistoryEntity {
     @Column(name = "deposit_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "agent_id")
     private AgentInformationEntity agent;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "account_information_id")
     private AccountInformationEntity accountInformation;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "transaction_status_id")
     private TransactionStatusEntity transactionStatus;
     
     @Column(name = "sum_initial")
     private BigDecimal sumInitial;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "deposit_currency_id")
     private CurrencyEntity depositCurrency;
 

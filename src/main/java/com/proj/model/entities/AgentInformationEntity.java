@@ -2,6 +2,7 @@ package com.proj.model.entities;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,18 +35,18 @@ public class AgentInformationEntity {
     @Column(name = "date_of_registration", nullable = false, updatable = false)
     private LocalDate dateOfRegistration;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "primary_address_id", nullable = false)
     private AddressEntity primaryAddress;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "secondary_address_id")
     private AddressEntity secondaryAddress;
 
     @Column(name = "email")
     private String email;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "gender_id")
     private GenderEntity selfIdentGender;
 
@@ -55,11 +56,11 @@ public class AgentInformationEntity {
     @Column(name = "social_security_number")
     private Long socialSecurityNumber;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "bank_branch_id")
     private BankBranchEntity bankBranch;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 

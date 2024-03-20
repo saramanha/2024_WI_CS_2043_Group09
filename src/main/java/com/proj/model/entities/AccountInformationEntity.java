@@ -2,6 +2,7 @@ package com.proj.model.entities;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,11 +26,11 @@ public class AccountInformationEntity {
     @Column(name = "bank_sum")
     private BigDecimal bankSum;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "currency_id")
     private CurrencyEntity currency;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "account_type_id")
     private AccountTypeEntity accountType;
 

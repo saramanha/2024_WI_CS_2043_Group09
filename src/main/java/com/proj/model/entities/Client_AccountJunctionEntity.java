@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 import com.proj.model.embeddables.Client_AccountJunctionId;
 
@@ -16,12 +17,12 @@ public class Client_AccountJunctionEntity {
     @EmbeddedId
     private Client_AccountJunctionId id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("agentId")
     @JoinColumn(name = "agent_id")
     private AgentInformationEntity agent;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @MapsId("accountInformationId")
     @JoinColumn(name = "account_information_id")
     private AccountInformationEntity account;
