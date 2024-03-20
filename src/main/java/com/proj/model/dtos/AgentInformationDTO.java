@@ -5,53 +5,19 @@ import java.time.LocalDate;
 
 
 public class AgentInformationDTO {
-    
-    
-    
     private Long id;
-
-    
     private String firstName;
-
-    
     private String lastName;
-
-    
     private String middleName;
-
-    
     private String additionalNames;
-
-    
     private LocalDate dateOfRegistration;
-
-    
-    
     private AddressDTO primaryAddress;
-
-    
-    
     private AddressDTO secondaryAddress;
-
-    
     private String email;
-
-    
-    
     private GenderDTO selfIdentGender;
-
-    
     private char sex;
-
-    
     private Long socialSecurityNumber;
-
-    
-    
     private BankBranchDTO bankBranch;
-
-    
-    
     private RoleDTO role;
 
     public Long getId() {
