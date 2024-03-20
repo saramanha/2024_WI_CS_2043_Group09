@@ -64,6 +64,29 @@ public class AgentInformationEntity {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
+    public AgentInformationEntity(Long id, String firstName, String lastName, String middleName, String additionalNames,
+            LocalDate dateOfRegistration, AddressEntity primaryAddress, AddressEntity secondaryAddress, String email,
+            GenderEntity selfIdentGender, char sex, Long socialSecurityNumber, BankBranchEntity bankBranch,
+            RoleEntity role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.additionalNames = additionalNames;
+        this.dateOfRegistration = dateOfRegistration;
+        this.primaryAddress = primaryAddress;
+        this.secondaryAddress = secondaryAddress;
+        this.email = email;
+        this.selfIdentGender = selfIdentGender;
+        this.sex = sex;
+        this.socialSecurityNumber = socialSecurityNumber;
+        this.bankBranch = bankBranch;
+        this.role = role;
+    }
+
+    public AgentInformationEntity() {
+    }
+
     public Long getId() {
         return id;
     }

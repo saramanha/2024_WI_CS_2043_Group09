@@ -30,6 +30,17 @@ public class Client_AccountJunctionEntity {
     @Column(name = "relationship_description")
     private String relationshipDescription;
 
+    public Client_AccountJunctionEntity(Client_AccountJunctionId id, AgentInformationEntity agent,
+            AccountInformationEntity account, String relationshipDescription) {
+        this.id = id;
+        this.agent = agent;
+        this.account = account;
+        this.relationshipDescription = relationshipDescription;
+    }
+
+    public Client_AccountJunctionEntity() {
+    }
+
     public Client_AccountJunctionId getId() {
         return id;
     }

@@ -25,6 +25,19 @@ public class DutyHistoryDTO {
     
     private AgentInformationDTO agent;
 
+    public DutyHistoryDTO(Long id, LocalDateTime dateTimeInitiated, LocalDateTime dateTimeSignoff,
+            BankBranchDTO bankBranch, String dutyNotes, AgentInformationDTO agent) {
+        this.id = id;
+        this.dateTimeInitiated = dateTimeInitiated;
+        this.dateTimeSignoff = dateTimeSignoff;
+        this.bankBranch = bankBranch;
+        this.dutyNotes = dutyNotes;
+        this.agent = agent;
+    }
+
+    public DutyHistoryDTO() {
+    }
+
     public Long getId() {
         return id;
     }

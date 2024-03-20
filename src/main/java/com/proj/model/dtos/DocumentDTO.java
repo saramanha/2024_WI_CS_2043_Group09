@@ -18,6 +18,16 @@ public class DocumentDTO {
     
     private byte[] content;
 
+    public DocumentDTO(Long id, DocumentTypeDTO documentType, AgentInformationDTO agent, byte[] content) {
+        this.id = id;
+        this.documentType = documentType;
+        this.agent = agent;
+        this.content = content;
+    }
+
+    public DocumentDTO() {
+    }
+
     public Long getId() {
         return id;
     }

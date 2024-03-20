@@ -28,6 +28,16 @@ public class FeedbackEntity {
     @Column(name = "description")
     private String description;
 
+    public FeedbackEntity(Long id, AgentInformationEntity agent, String title, String description) {
+        this.id = id;
+        this.agent = agent;
+        this.title = title;
+        this.description = description;
+    }
+
+    public FeedbackEntity() {
+    }
+
     public Long getId() {
         return id;
     }

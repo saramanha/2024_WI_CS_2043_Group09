@@ -21,6 +21,15 @@ public class GenderEntity {
     @Column(name = "description")
     private String description;
     
+    public GenderEntity(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public GenderEntity() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -11,6 +11,21 @@ public class TransactionHistoryDTO {
     private LocalDateTime transactionInitiationDateTime;
     private LocalDateTime transactionClosureDateTime;
 
+    public TransactionHistoryDTO(TransactionHistoryIdDTO id, DepositHistoryDTO deposit, WithdrawalHistoryDTO withdrawal,
+            TransactionTypeDTO transactionType, TransactionStatusDTO transactionStatus,
+            LocalDateTime transactionInitiationDateTime, LocalDateTime transactionClosureDateTime) {
+        this.id = id;
+        this.deposit = deposit;
+        this.withdrawal = withdrawal;
+        this.transactionType = transactionType;
+        this.transactionStatus = transactionStatus;
+        this.transactionInitiationDateTime = transactionInitiationDateTime;
+        this.transactionClosureDateTime = transactionClosureDateTime;
+    }
+
+    public TransactionHistoryDTO() {
+    }
+
     public TransactionHistoryIdDTO getId() {
         return id;
     }

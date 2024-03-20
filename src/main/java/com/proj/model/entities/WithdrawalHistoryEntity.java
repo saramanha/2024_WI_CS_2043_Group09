@@ -46,6 +46,22 @@ public class WithdrawalHistoryEntity {
     @Column(name = "date_time_initiated")
     private LocalDateTime dateTimeInitiated;
 
+    public WithdrawalHistoryEntity(Long id, AgentInformationEntity agent, AccountInformationEntity accountInformation,
+            TransactionStatusEntity transactionStatus, BigDecimal sumInitial, CurrencyEntity depositCurrency,
+            BigDecimal sumConverted, LocalDateTime dateTimeInitiated) {
+        this.id = id;
+        this.agent = agent;
+        this.accountInformation = accountInformation;
+        this.transactionStatus = transactionStatus;
+        this.sumInitial = sumInitial;
+        this.depositCurrency = depositCurrency;
+        this.sumConverted = sumConverted;
+        this.dateTimeInitiated = dateTimeInitiated;
+    }
+
+    public WithdrawalHistoryEntity() {
+    }
+
     public Long getId() {
         return id;
     }

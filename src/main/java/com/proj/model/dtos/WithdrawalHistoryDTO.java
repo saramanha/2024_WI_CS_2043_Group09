@@ -34,6 +34,22 @@ public class WithdrawalHistoryDTO {
     
     private LocalDateTime dateTimeInitiated;
 
+    public WithdrawalHistoryDTO(Long id, AgentInformationDTO agent, AccountInformationDTO accountInformation,
+            TransactionStatusDTO transactionStatus, BigDecimal sumInitial, CurrencyDTO depositCurrency,
+            BigDecimal sumConverted, LocalDateTime dateTimeInitiated) {
+        this.id = id;
+        this.agent = agent;
+        this.accountInformation = accountInformation;
+        this.transactionStatus = transactionStatus;
+        this.sumInitial = sumInitial;
+        this.depositCurrency = depositCurrency;
+        this.sumConverted = sumConverted;
+        this.dateTimeInitiated = dateTimeInitiated;
+    }
+
+    public WithdrawalHistoryDTO() {
+    }
+
     public Long getId() {
         return id;
     }

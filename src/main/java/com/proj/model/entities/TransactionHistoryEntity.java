@@ -43,6 +43,22 @@ public class TransactionHistoryEntity {
     @Column(name = "transaction_closure_date_time")
     private LocalDateTime transactionClosureDateTime;
 
+    public TransactionHistoryEntity(TransactionHistoryId id, DepositHistoryEntity deposit,
+            WithdrawalHistoryEntity withdrawal, TransactionTypeEntity transactionType,
+            TransactionStatusEntity transactionStatus, LocalDateTime transactionInitiationDateTime,
+            LocalDateTime transactionClosureDateTime) {
+        this.id = id;
+        this.deposit = deposit;
+        this.withdrawal = withdrawal;
+        this.transactionType = transactionType;
+        this.transactionStatus = transactionStatus;
+        this.transactionInitiationDateTime = transactionInitiationDateTime;
+        this.transactionClosureDateTime = transactionClosureDateTime;
+    }
+
+    public TransactionHistoryEntity() {
+    }
+
     public TransactionHistoryId getId() {
         return id;
     }

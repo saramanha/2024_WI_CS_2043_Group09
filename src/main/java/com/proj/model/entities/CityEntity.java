@@ -18,6 +18,14 @@ public class CityEntity {
     @Column(name = "city_name", nullable = false)
     private String cityName;
 
+    public CityEntity(Long id, String cityName) {
+        this.id = id;
+        this.cityName = cityName;
+    }
+
+    public CityEntity() {
+    }
+
     public Long getId() {
         return id;
     }

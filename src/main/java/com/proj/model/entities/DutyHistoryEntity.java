@@ -37,6 +37,19 @@ public class DutyHistoryEntity {
     @JoinColumn(name = "agent_id")
     private AgentInformationEntity agent;
 
+    public DutyHistoryEntity(Long id, LocalDateTime dateTimeInitiated, LocalDateTime dateTimeSignoff,
+            BankBranchEntity bankBranch, String dutyNotes, AgentInformationEntity agent) {
+        this.id = id;
+        this.dateTimeInitiated = dateTimeInitiated;
+        this.dateTimeSignoff = dateTimeSignoff;
+        this.bankBranch = bankBranch;
+        this.dutyNotes = dutyNotes;
+        this.agent = agent;
+    }
+
+    public DutyHistoryEntity() {
+    }
+
     public Long getId() {
         return id;
     }

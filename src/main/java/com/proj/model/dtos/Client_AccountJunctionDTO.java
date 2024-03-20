@@ -6,6 +6,17 @@ public class Client_AccountJunctionDTO {
     private AccountInformationDTO account;
     private String relationshipDescription;
 
+    public Client_AccountJunctionDTO(Client_AccountJunctionIdDTO id, AgentInformationDTO agent,
+            AccountInformationDTO account, String relationshipDescription) {
+        this.id = id;
+        this.agent = agent;
+        this.account = account;
+        this.relationshipDescription = relationshipDescription;
+    }
+
+    public Client_AccountJunctionDTO() {
+    }
+
     public Client_AccountJunctionIdDTO getId() {
         return id;
     }

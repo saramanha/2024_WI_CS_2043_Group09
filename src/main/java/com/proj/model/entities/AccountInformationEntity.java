@@ -34,6 +34,18 @@ public class AccountInformationEntity {
     @JoinColumn(name = "account_type_id")
     private AccountTypeEntity accountType;
 
+    public AccountInformationEntity(Long id, Boolean isActive, BigDecimal bankSum, CurrencyEntity currency,
+            AccountTypeEntity accountType) {
+        this.id = id;
+        this.isActive = isActive;
+        this.bankSum = bankSum;
+        this.currency = currency;
+        this.accountType = accountType;
+    }
+
+    public AccountInformationEntity() {
+    }
+
     public Long getId() {
         return id;
     }

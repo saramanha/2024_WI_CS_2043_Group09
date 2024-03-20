@@ -18,6 +18,14 @@ public class DocumentTypeEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
+    public DocumentTypeEntity(Long id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    public DocumentTypeEntity() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -31,6 +31,16 @@ public class DocumentEntity {
     @Column(name = "content")
     private byte[] content;
 
+    public DocumentEntity(Long id, DocumentTypeEntity documentType, AgentInformationEntity agent, byte[] content) {
+        this.id = id;
+        this.documentType = documentType;
+        this.agent = agent;
+        this.content = content;
+    }
+
+    public DocumentEntity() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,14 @@ public class CountryEntity {
     @Column(name = "country_name", nullable = false)
     private String countryName;
 
+    public CountryEntity(Long id, String countryName) {
+        this.id = id;
+        this.countryName = countryName;
+    }
+
+    public CountryEntity() {
+    }
+
     public Long getId() {
         return id;
     }

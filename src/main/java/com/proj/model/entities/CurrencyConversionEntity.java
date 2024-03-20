@@ -38,6 +38,19 @@ public class CurrencyConversionEntity {
     @Column(name = "effective_date_time")
     private LocalDateTime effectiveDateTime;
 
+    public CurrencyConversionEntity(CurrencyConversionId id, CurrencyEntity fromCurrency, CurrencyEntity toCurrency,
+            Long multRateDenominator, Long multRateNumerator, LocalDateTime effectiveDateTime) {
+        this.id = id;
+        this.fromCurrency = fromCurrency;
+        this.toCurrency = toCurrency;
+        this.multRateDenominator = multRateDenominator;
+        this.multRateNumerator = multRateNumerator;
+        this.effectiveDateTime = effectiveDateTime;
+    }
+
+    public CurrencyConversionEntity() {
+    }
+
     public CurrencyConversionId getId() {
         return id;
     }

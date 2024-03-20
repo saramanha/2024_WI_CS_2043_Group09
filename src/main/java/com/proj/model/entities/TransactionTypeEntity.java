@@ -21,6 +21,15 @@ public class TransactionTypeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    public TransactionTypeEntity(Long id, String description, String name) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
+    }
+
+    public TransactionTypeEntity() {
+    }
+
     public Long getId() {
         return id;
     }

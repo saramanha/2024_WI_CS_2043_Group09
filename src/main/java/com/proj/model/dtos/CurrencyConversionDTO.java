@@ -10,6 +10,19 @@ public class CurrencyConversionDTO {
     private Long multRateNumerator;
     private LocalDateTime effectiveDateTime;
 
+    public CurrencyConversionDTO(CurrencyConversionIdDTO id, CurrencyDTO fromCurrency, CurrencyDTO toCurrency,
+            Long multRateDenominator, Long multRateNumerator, LocalDateTime effectiveDateTime) {
+        this.id = id;
+        this.fromCurrency = fromCurrency;
+        this.toCurrency = toCurrency;
+        this.multRateDenominator = multRateDenominator;
+        this.multRateNumerator = multRateNumerator;
+        this.effectiveDateTime = effectiveDateTime;
+    }
+
+    public CurrencyConversionDTO() {
+    }
+
     public CurrencyConversionIdDTO getId() {
         return id;
     }

@@ -16,6 +16,16 @@ public class FeedbackDTO {
     
     private String description;
 
+    public FeedbackDTO(Long id, AgentInformationDTO agent, String title, String description) {
+        this.id = id;
+        this.agent = agent;
+        this.title = title;
+        this.description = description;
+    }
+
+    public FeedbackDTO() {
+    }
+
     public Long getId() {
         return id;
     }

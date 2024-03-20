@@ -12,6 +12,15 @@ public class CurrencyDTO {
     
     private String currencyAcronym;
 
+    public CurrencyDTO(Long id, String currencyName, String currencyAcronym) {
+        this.id = id;
+        this.currencyName = currencyName;
+        this.currencyAcronym = currencyAcronym;
+    }
+
+    public CurrencyDTO() {
+    }
+
     public Long getId() {
         return id;
     }

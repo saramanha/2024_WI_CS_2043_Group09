@@ -6,6 +6,14 @@ public class CountryDTO {
     
     private String countryName;
 
+    public CountryDTO(Long id, String countryName) {
+        this.id = id;
+        this.countryName = countryName;
+    }
+
+    public CountryDTO() {
+    }
+
     public Long getId() {
         return id;
     }

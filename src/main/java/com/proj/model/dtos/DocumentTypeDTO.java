@@ -11,6 +11,14 @@ public class DocumentTypeDTO {
     
     private String description;
 
+    public DocumentTypeDTO(Long id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    public DocumentTypeDTO() {
+    }
+
     public Long getId() {
         return id;
     }

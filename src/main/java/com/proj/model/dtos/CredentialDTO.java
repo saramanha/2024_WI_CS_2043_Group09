@@ -18,6 +18,18 @@ public class CredentialDTO {
     
     private String passwordHashSalt;
 
+    public CredentialDTO(Long id, AgentInformationDTO agent, String userName, String passwordHash,
+            String passwordHashSalt) {
+        this.id = id;
+        this.agent = agent;
+        this.userName = userName;
+        this.passwordHash = passwordHash;
+        this.passwordHashSalt = passwordHashSalt;
+    }
+
+    public CredentialDTO() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,14 @@ public class ProvinceEntity {
     @Column(name = "province_name", nullable = false)
     private String provinceName;
 
+    public ProvinceEntity(Long id, String provinceName) {
+        this.id = id;
+        this.provinceName = provinceName;
+    }
+
+    public ProvinceEntity() {
+    }
+
     public Long getId() {
         return id;
     } 

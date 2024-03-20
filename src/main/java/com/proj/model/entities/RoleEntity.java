@@ -21,6 +21,15 @@ public class RoleEntity {
     @Column(name = "description")
     private String description;
     
+    public RoleEntity(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public RoleEntity() {
+    }
+
     public Long getId() {
         return id;
     }

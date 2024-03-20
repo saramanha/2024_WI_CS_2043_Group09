@@ -20,6 +20,28 @@ public class AgentInformationDTO {
     private BankBranchDTO bankBranch;
     private RoleDTO role;
 
+    public AgentInformationDTO() {
+    }
+
+    public AgentInformationDTO(Long id, String firstName, String lastName, String middleName, String additionalNames,
+            LocalDate dateOfRegistration, AddressDTO primaryAddress, AddressDTO secondaryAddress, String email,
+            GenderDTO selfIdentGender, char sex, Long socialSecurityNumber, BankBranchDTO bankBranch, RoleDTO role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.additionalNames = additionalNames;
+        this.dateOfRegistration = dateOfRegistration;
+        this.primaryAddress = primaryAddress;
+        this.secondaryAddress = secondaryAddress;
+        this.email = email;
+        this.selfIdentGender = selfIdentGender;
+        this.sex = sex;
+        this.socialSecurityNumber = socialSecurityNumber;
+        this.bankBranch = bankBranch;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }

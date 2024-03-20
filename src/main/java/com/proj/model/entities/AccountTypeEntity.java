@@ -26,6 +26,16 @@ public class AccountTypeEntity {
     @Column(name = "date_effective", nullable = false)
     private LocalDate dateEffective;
 
+    public AccountTypeEntity(Long id, String name, double currentInterestRate, LocalDate dateEffective) {
+        this.id = id;
+        this.name = name;
+        this.currentInterestRate = currentInterestRate;
+        this.dateEffective = dateEffective;
+    }
+
+    public AccountTypeEntity() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -12,6 +12,15 @@ public class TransactionTypeDTO {
     
     private String name;
 
+    public TransactionTypeDTO(Long id, String description, String name) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
+    }
+
+    public TransactionTypeDTO() {
+    }
+
     public Long getId() {
         return id;
     }

@@ -21,6 +21,15 @@ public class CurrencyEntity {
     @Column(name = "currency_acronym", nullable = false)
     private String currencyAcronym;
 
+    public CurrencyEntity(Long id, String currencyName, String currencyAcronym) {
+        this.id = id;
+        this.currencyName = currencyName;
+        this.currencyAcronym = currencyAcronym;
+    }
+
+    public CurrencyEntity() {
+    }
+
     public Long getId() {
         return id;
     }

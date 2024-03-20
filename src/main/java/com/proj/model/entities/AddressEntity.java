@@ -39,6 +39,20 @@ public class AddressEntity {
     @JoinColumn(name = "country_id")
     private CountryEntity country;
 
+    public AddressEntity(Long id, String addressLine1, String addressLine2, String streetName, CityEntity city,
+            ProvinceEntity province, CountryEntity country) {
+        this.id = id;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.streetName = streetName;
+        this.city = city;
+        this.province = province;
+        this.country = country;
+    }
+
+    public AddressEntity() {
+    }
+
     public Long getId() {
         return id;
     }

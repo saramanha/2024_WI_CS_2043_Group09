@@ -9,6 +9,20 @@ public class AddressDTO {
     private ProvinceDTO province;
     private CountryDTO country;
 
+    public AddressDTO(Long id, String addressLine1, String addressLine2, String streetName, CityDTO city,
+            ProvinceDTO province, CountryDTO country) {
+        this.id = id;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.streetName = streetName;
+        this.city = city;
+        this.province = province;
+        this.country = country;
+    }
+
+    public AddressDTO() {
+    }
+
     public Long getId() {
         return id;
     }

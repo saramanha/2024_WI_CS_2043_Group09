@@ -12,6 +12,15 @@ public class GenderDTO {
     
     private String description;
     
+    public GenderDTO(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public GenderDTO() {
+    }
+
     public Long getId() {
         return id;
     }

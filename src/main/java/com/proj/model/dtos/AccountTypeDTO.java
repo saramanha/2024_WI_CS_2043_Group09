@@ -8,6 +8,16 @@ public class AccountTypeDTO {
     private double currentInterestRate;
     private LocalDate dateEffective;
 
+    public AccountTypeDTO(Long id, String name, double currentInterestRate, LocalDate dateEffective) {
+        this.id = id;
+        this.name = name;
+        this.currentInterestRate = currentInterestRate;
+        this.dateEffective = dateEffective;
+    }
+
+    public AccountTypeDTO() {
+    }
+
     public Long getId() {
         return id;
     }

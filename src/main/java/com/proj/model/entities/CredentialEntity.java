@@ -28,6 +28,18 @@ public class CredentialEntity {
     @Column(name = "password_hash_salt")
     private String passwordHashSalt;
 
+    public CredentialEntity(Long id, AgentInformationEntity agent, String userName, String passwordHash,
+            String passwordHashSalt) {
+        this.id = id;
+        this.agent = agent;
+        this.userName = userName;
+        this.passwordHash = passwordHash;
+        this.passwordHashSalt = passwordHashSalt;
+    }
+
+    public CredentialEntity() {
+    }
+
     public Long getId() {
         return id;
     }

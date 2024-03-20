@@ -25,6 +25,15 @@ public class BankBranchEntity {
     @Column(name = "description")
     private String description;
 
+    public BankBranchEntity(Long id, AddressEntity address, String description) {
+        this.id = id;
+        this.address = address;
+        this.description = description;
+    }
+
+    public BankBranchEntity() {
+    }
+
     public Long getId() {
         return id;
     }

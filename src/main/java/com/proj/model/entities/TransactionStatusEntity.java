@@ -21,6 +21,15 @@ public class TransactionStatusEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    public TransactionStatusEntity(Long id, String description, String name) {
+        this.id = id;
+        this.description = description;
+        this.name = name;
+    }
+
+    public TransactionStatusEntity() {
+    }
+
     public Long getId() {
         return id;
     }

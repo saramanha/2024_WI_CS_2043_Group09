@@ -9,6 +9,14 @@ public class ProvinceDTO {
     
     private String provinceName;
 
+    public ProvinceDTO(Long id, String provinceName) {
+        this.id = id;
+        this.provinceName = provinceName;
+    }
+
+    public ProvinceDTO() {
+    }
+
     public Long getId() {
         return id;
     } 
