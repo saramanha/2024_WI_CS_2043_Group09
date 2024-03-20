@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 // This class updates and persists the updates made to a given client object
 @Service
 public class ClientService {
+
     public ClientService() {};
     public ClientService(Client client) {
 
@@ -14,7 +15,6 @@ public class ClientService {
     public Client getCurrentClient() {
         return null;
     }
-
 
     public void saveClient() {
 

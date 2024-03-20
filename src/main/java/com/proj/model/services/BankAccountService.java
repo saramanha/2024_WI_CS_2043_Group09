@@ -12,4 +12,52 @@ public class BankAccountService {
     public BankAccountService(AccountInformationDTO bankAccount) {
 
     }
+
+    public void deposit() {
+
+    }
+
+    public void withdrawal() {
+
+    }
+
+    public void processTransaction() {
+
+    }
+
+    public void addOwner() {
+
+    }
+
+    public void removeOwner() {
+
+    }
+
+    public void getOwners() {
+
+    }
+
+    public void changeCurrency() {
+
+    }
+
+    public void deactivate() {
+
+    }
+
+    public void activate() {
+
+    }
+
+    // public void getTransactionHistory() {
+
+    // }
+
+    // public void getDepositHistory() {
+
+    // }
+
+    // public void getWithdrawalsHistory() {
+
+    // }
 }
