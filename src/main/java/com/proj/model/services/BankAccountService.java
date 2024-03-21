@@ -1,4 +1,4 @@
-// TODO: create exception system. Scan for activeness of the account
+// TODO: create exception system. Scan for the activeness of the account -> Done
 // TODO: Add length restriciton
 
 package com.proj.model.services;
@@ -85,61 +85,94 @@ public class BankAccountService {
         this.transactionHistoryRepo = transactionHistoryRepo;
     }
 
-    // TODO: Set up transaciton status system. Currently null
+    // TODO: Set up transaciton status system. Currently null -> Done
     @Transactional
-    public DepositHistoryDTO deposit(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow();
-        AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow();
-        CurrencyEntity depositCurrency = currencyRepo.findById(currencyId).orElseThrow();
+    public DepositHistoryDTO deposit(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) {
+        try {
+            AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(EntityNotFoundException::new);
+            checkAccountIsActive(bankAccEntity);
 
-        BigDecimal finalSum = sum;
-        if(!bankAccEntity.getCurrency().getId().equals(depositCurrency.getId())) {
-            CurrencyConversionId currencyConversionId = new CurrencyConversionId(depositCurrency.getId(), bankAccEntity.getCurrency().getId());
-            CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow();
-            finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
-                          .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+            AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(EntityNotFoundException::new);
+            CurrencyEntity depositCurrency = currencyRepo.findById(currencyId).orElseThrow(EntityNotFoundException::new);
+
+            BigDecimal finalSum = sum;
+            if(!bankAccEntity.getCurrency().getId().equals(depositCurrency.getId())) {
+                CurrencyConversionId currencyConversionId = new CurrencyConversionId(depositCurrency.getId(), bankAccEntity.getCurrency().getId());
+                CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(EntityNotFoundException::new);
+                finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
+                              .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+            }
+
+            TransactionStatusEntity transactionStatus = new TransactionStatusEntity("SUCCESS");
+            transactionStatus = transactionStatusRepo.save(transactionStatus);
+
+            DepositHistoryEntity depositRecord = new DepositHistoryEntity(null,
+                                                                    clientAccEntity, 
+                                                                    bankAccEntity, 
+                                                                    transactionStatus, 
+                                                                    sum, 
+                                                                    depositCurrency, 
+                                                                    finalSum, 
+                                                                    LocalDateTime.now());
+            depositRecord = depositHistoryRepo.saveAndFlush(depositRecord);
+            bankAccEntity.setBankSum(bankAccEntity.getBankSum().add(finalSum));
+            accountInformationRepo.saveAndFlush(bankAccEntity);
+
+            return DepositHistoryMapper.INSTANCE.entityToDto(depositRecord);
+        } catch (EntityNotFoundException e) {
+            throw new BankAccountException("Error processing deposit: Account or currency not found.");
+        } catch (Exception e) {
+            throw new BankAccountException("Error processing deposit: " + e.getMessage());
         }
-
-        DepositHistoryEntity depositRecord = new DepositHistoryEntity(null,
-                                                                clientAccEntity, 
-                                                                bankAccEntity, 
-                                                                null, 
-                                                                sum, 
-                                                                depositCurrency, 
-                                                                finalSum, 
-                                                                LocalDateTime.now());
-        depositRecord = depositHistoryRepo.saveAndFlush(depositRecord);
-        bankAccEntity.setBankSum(bankAccEntity.getBankSum().add(finalSum));
-        accountInformationRepo.saveAndFlush(bankAccEntity);
-        return DepositHistoryMapper.INSTANCE.entityToDto(depositRecord);
     }
     
     @Transactional
-    public WithdrawalHistoryDTO withdrawal(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow();
-        AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow();
-        CurrencyEntity withdrawalCurrency = currencyRepo.findById(currencyId).orElseThrow();
+    public WithdrawalHistoryDTO withdrawal(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) {
+        try {
+            AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(EntityNotFoundException::new);
+            checkAccountIsActive(bankAccEntity);
 
-        BigDecimal finalSum = sum;
-        if(!bankAccEntity.getCurrency().getId().equals(withdrawalCurrency.getId())) {
-            CurrencyConversionId currencyConversionId = new CurrencyConversionId(withdrawalCurrency.getId(), bankAccEntity.getCurrency().getId());
-            CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow();
-            finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
-                          .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+            AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(EntityNotFoundException::new);
+            CurrencyEntity withdrawalCurrency = currencyRepo.findById(currencyId).orElseThrow(EntityNotFoundException::new);
+
+            BigDecimal finalSum = sum;
+            if(!bankAccEntity.getCurrency().getId().equals(withdrawalCurrency.getId())) {
+                CurrencyConversionId currencyConversionId = new CurrencyConversionId(withdrawalCurrency.getId(), bankAccEntity.getCurrency().getId());
+                CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(EntityNotFoundException::new);
+                finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
+                              .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+            }
+
+            if (bankAccEntity.getBankSum().compareTo(finalSum) < 0) {
+                throw new InsufficientFundsException("Insufficient funds in the account.");
+            }
+
+            WithdrawalHistoryEntity withdrawalRecord = new WithdrawalHistoryEntity(null,
+                                                                        clientAccEntity, 
+                                                                        bankAccEntity, 
+                                                                        null, 
+                                                                        sum, 
+                                                                        withdrawalCurrency, 
+                                                                        finalSum, 
+                                                                        LocalDateTime.now());
+            withdrawalRecord = withdrawalHistoryRepo.saveAndFlush(withdrawalRecord);
+            bankAccEntity.setBankSum(bankAccEntity.getBankSum().subtract(finalSum));
+            accountInformationRepo.saveAndFlush(bankAccEntity);
+
+            return WithdrawalHistoryMapper.INSTANCE.entityToDto(withdrawalRecord);
+        } catch (EntityNotFoundException e) {
+            throw new BankAccountException("Error processing withdrawal: Account or currency not found.");
+        } catch (InsufficientFundsException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BankAccountException("Error processing withdrawal: " + e.getMessage());
         }
+    }
 
-        WithdrawalHistoryEntity withdrawalRecord = new WithdrawalHistoryEntity(null,
-                                                                clientAccEntity, 
-                                                                bankAccEntity, 
-                                                                null, 
-                                                                sum, 
-                                                                withdrawalCurrency, 
-                                                                finalSum, 
-                                                                LocalDateTime.now());
-        withdrawalRecord = withdrawalHistoryRepo.saveAndFlush(withdrawalRecord);
-        bankAccEntity.setBankSum(bankAccEntity.getBankSum().subtract(finalSum));
-        accountInformationRepo.saveAndFlush(bankAccEntity);
-        return WithdrawalHistoryMapper.INSTANCE.entityToDto(withdrawalRecord);
+    private void checkAccountIsActive(AccountInformationEntity account) {
+        if (!account.getIsActive()) {
+            throw new AccountInactiveException("The account is inactive.");
+        }
     }
     
     @Transactional
