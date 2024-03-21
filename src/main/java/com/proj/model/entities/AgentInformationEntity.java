@@ -53,6 +53,9 @@ public class AgentInformationEntity {
     @Column(name = "sex")
     private char sex;
 
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
     @Column(name = "social_security_number")
     private Long socialSecurityNumber;
 
@@ -66,7 +69,7 @@ public class AgentInformationEntity {
 
     public AgentInformationEntity(Long id, String firstName, String lastName, String middleName, String additionalNames,
             LocalDate dateOfRegistration, AddressEntity primaryAddress, AddressEntity secondaryAddress, String email,
-            GenderEntity selfIdentGender, char sex, Long socialSecurityNumber, BankBranchEntity bankBranch,
+            GenderEntity selfIdentGender, char sex, LocalDate dateOfBirth, Long socialSecurityNumber, BankBranchEntity bankBranch,
             RoleEntity role) {
         this.id = id;
         this.firstName = firstName;
@@ -82,6 +85,7 @@ public class AgentInformationEntity {
         this.socialSecurityNumber = socialSecurityNumber;
         this.bankBranch = bankBranch;
         this.role = role;
+        this.dateOfBirth = dateOfBirth;
     }
 
     public AgentInformationEntity() {
@@ -193,5 +197,17 @@ public class AgentInformationEntity {
 
     public void setRole(RoleEntity role) {
         this.role = role;
+    }
+
+    public void setDateOfRegistration(LocalDate dateOfRegistration) {
+        this.dateOfRegistration = dateOfRegistration;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }
