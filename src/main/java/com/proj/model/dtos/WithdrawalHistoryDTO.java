@@ -26,7 +26,7 @@ public class WithdrawalHistoryDTO {
 
     
     
-    private CurrencyDTO depositCurrency;
+    private CurrencyDTO withdrawalCurrency;
 
     
     private BigDecimal sumConverted;
@@ -35,14 +35,14 @@ public class WithdrawalHistoryDTO {
     private LocalDateTime dateTimeInitiated;
 
     public WithdrawalHistoryDTO(Long id, AgentInformationDTO agent, AccountInformationDTO accountInformation,
-            TransactionStatusDTO transactionStatus, BigDecimal sumInitial, CurrencyDTO depositCurrency,
+            TransactionStatusDTO transactionStatus, BigDecimal sumInitial, CurrencyDTO withdrawalCurrency,
             BigDecimal sumConverted, LocalDateTime dateTimeInitiated) {
         this.id = id;
         this.agent = agent;
         this.accountInformation = accountInformation;
         this.transactionStatus = transactionStatus;
         this.sumInitial = sumInitial;
-        this.depositCurrency = depositCurrency;
+        this.withdrawalCurrency = withdrawalCurrency;
         this.sumConverted = sumConverted;
         this.dateTimeInitiated = dateTimeInitiated;
     }
@@ -91,11 +91,11 @@ public class WithdrawalHistoryDTO {
     }
 
     public CurrencyDTO getDepositCurrency() {
-        return depositCurrency;
+        return withdrawalCurrency;
     }
 
-    public void setDepositCurrency(CurrencyDTO depositCurrency) {
-        this.depositCurrency = depositCurrency;
+    public void setDepositCurrency(CurrencyDTO withdrawalCurrency) {
+        this.withdrawalCurrency = withdrawalCurrency;
     }
 
     public BigDecimal getSumConverted() {
