@@ -1,1 +1,7 @@
 .DS_STORE
+TODO
+.vscode
+derby.log
+myDatabase
+target
+*.class
