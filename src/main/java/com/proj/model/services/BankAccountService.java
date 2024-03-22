@@ -1,4 +1,3 @@
-// TODO: create exception system. Scan for the activeness of the account -> Done
 // TODO: Add length restriciton
 
 package com.proj.model.services;
@@ -30,7 +29,11 @@ import com.proj.model.entities.CurrencyConversionEntity;
 import com.proj.model.entities.CurrencyEntity;
 import com.proj.model.entities.DepositHistoryEntity;
 import com.proj.model.entities.TransactionHistoryEntity;
+import com.proj.model.entities.TransactionStatusEntity;
 import com.proj.model.entities.WithdrawalHistoryEntity;
+import com.proj.model.exceptions.AccountInactiveException;
+import com.proj.model.exceptions.BankAccountException;
+import com.proj.model.exceptions.InsufficientFundsException;
 import com.proj.model.mappers.AccountInformationMapper;
 import com.proj.model.mappers.AgentInformationMapper;
 import com.proj.model.mappers.DepositHistoryMapper;
@@ -85,122 +88,162 @@ public class BankAccountService {
         this.transactionHistoryRepo = transactionHistoryRepo;
     }
 
-    // TODO: Set up transaciton status system. Currently null -> Done
-    @Transactional
-    public DepositHistoryDTO deposit(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) {
-        try {
-            AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(EntityNotFoundException::new);
-            checkAccountIsActive(bankAccEntity);
-
-            AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(EntityNotFoundException::new);
-            CurrencyEntity depositCurrency = currencyRepo.findById(currencyId).orElseThrow(EntityNotFoundException::new);
-
-            BigDecimal finalSum = sum;
-            if(!bankAccEntity.getCurrency().getId().equals(depositCurrency.getId())) {
-                CurrencyConversionId currencyConversionId = new CurrencyConversionId(depositCurrency.getId(), bankAccEntity.getCurrency().getId());
-                CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(EntityNotFoundException::new);
-                finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
-                              .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
-            }
-
-            TransactionStatusEntity transactionStatus = new TransactionStatusEntity("SUCCESS");
-            transactionStatus = transactionStatusRepo.save(transactionStatus);
-
-            DepositHistoryEntity depositRecord = new DepositHistoryEntity(null,
-                                                                    clientAccEntity, 
-                                                                    bankAccEntity, 
-                                                                    transactionStatus, 
-                                                                    sum, 
-                                                                    depositCurrency, 
-                                                                    finalSum, 
-                                                                    LocalDateTime.now());
-            depositRecord = depositHistoryRepo.saveAndFlush(depositRecord);
-            bankAccEntity.setBankSum(bankAccEntity.getBankSum().add(finalSum));
-            accountInformationRepo.saveAndFlush(bankAccEntity);
-
-            return DepositHistoryMapper.INSTANCE.entityToDto(depositRecord);
-        } catch (EntityNotFoundException e) {
-            throw new BankAccountException("Error processing deposit: Account or currency not found.");
-        } catch (Exception e) {
-            throw new BankAccountException("Error processing deposit: " + e.getMessage());
-        }
-    }
-    
-    @Transactional
-    public WithdrawalHistoryDTO withdrawal(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) {
-        try {
-            AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(EntityNotFoundException::new);
-            checkAccountIsActive(bankAccEntity);
-
-            AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(EntityNotFoundException::new);
-            CurrencyEntity withdrawalCurrency = currencyRepo.findById(currencyId).orElseThrow(EntityNotFoundException::new);
-
-            BigDecimal finalSum = sum;
-            if(!bankAccEntity.getCurrency().getId().equals(withdrawalCurrency.getId())) {
-                CurrencyConversionId currencyConversionId = new CurrencyConversionId(withdrawalCurrency.getId(), bankAccEntity.getCurrency().getId());
-                CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(EntityNotFoundException::new);
-                finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
-                              .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
-            }
-
-            if (bankAccEntity.getBankSum().compareTo(finalSum) < 0) {
-                throw new InsufficientFundsException("Insufficient funds in the account.");
-            }
-
-            WithdrawalHistoryEntity withdrawalRecord = new WithdrawalHistoryEntity(null,
-                                                                        clientAccEntity, 
-                                                                        bankAccEntity, 
-                                                                        null, 
-                                                                        sum, 
-                                                                        withdrawalCurrency, 
-                                                                        finalSum, 
-                                                                        LocalDateTime.now());
-            withdrawalRecord = withdrawalHistoryRepo.saveAndFlush(withdrawalRecord);
-            bankAccEntity.setBankSum(bankAccEntity.getBankSum().subtract(finalSum));
-            accountInformationRepo.saveAndFlush(bankAccEntity);
-
-            return WithdrawalHistoryMapper.INSTANCE.entityToDto(withdrawalRecord);
-        } catch (EntityNotFoundException e) {
-            throw new BankAccountException("Error processing withdrawal: Account or currency not found.");
-        } catch (InsufficientFundsException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new BankAccountException("Error processing withdrawal: " + e.getMessage());
-        }
-    }
-
-    private void checkAccountIsActive(AccountInformationEntity account) {
+    private void checkAccountIsActive(AccountInformationEntity account) throws AccountInactiveException {
         if (!account.getIsActive()) {
             throw new AccountInactiveException("The account is inactive.");
         }
     }
+
+    private BankAccountException getBankAccountInfoNotFound() {
+        return new BankAccountException("Bank account info not found", false, true, false, false);
+    }
+
+    private BankAccountException getBankAccountPersionalInfoNotFound() {
+        return new BankAccountException("Client account info not found", true, false, false, false);
+    }
+
+    private BankAccountException getBankAccountCurrencyNotFound() {
+        return new BankAccountException("Currency not found", false, false, true, false);
+    }
+
+    private BankAccountException getBankAccountCurrencyConvRateNotFound() {
+        return new BankAccountException("Currency conversion rate not found", false, false, false, true);
+    }
+
+    @Transactional
+    public DepositHistoryDTO deposit(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId) 
+    throws BankAccountException, AccountInactiveException, InsufficientFundsException, AccountInactiveException {
+        AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
+        checkAccountIsActive(bankAccEntity);
+
+        AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(
+            () -> (getBankAccountPersionalInfoNotFound())
+        );
+        CurrencyEntity depositCurrency = currencyRepo.findById(currencyId).orElseThrow(
+            () -> (getBankAccountCurrencyNotFound())
+        );
+
+        BigDecimal finalSum = sum;
+        if(!bankAccEntity.getCurrency().getId().equals(depositCurrency.getId())) {
+            CurrencyConversionId currencyConversionId = new CurrencyConversionId(depositCurrency.getId(), bankAccEntity.getCurrency().getId());
+            CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(
+                () -> (getBankAccountCurrencyConvRateNotFound())
+            );
+            finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
+                            .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+        }
+
+        TransactionStatusEntity transactionStatus = new TransactionStatusEntity(null, "SUCCESS", "Successful transaction");
+        transactionStatus = transactionStatusRepo.save(transactionStatus);
+
+        DepositHistoryEntity depositRecord = new DepositHistoryEntity(null,
+                                                                clientAccEntity, 
+                                                                bankAccEntity, 
+                                                                transactionStatus, 
+                                                                sum, 
+                                                                depositCurrency, 
+                                                                finalSum, 
+                                                                LocalDateTime.now());
+        depositRecord = depositHistoryRepo.saveAndFlush(depositRecord);
+        bankAccEntity.setBankSum(bankAccEntity.getBankSum().add(finalSum));
+        accountInformationRepo.saveAndFlush(bankAccEntity);
+
+        return DepositHistoryMapper.INSTANCE.entityToDto(depositRecord);
+    }
+    
+    @Transactional
+    public WithdrawalHistoryDTO withdrawal(Long bankAccountId, Long clientId, BigDecimal sum, Long currencyId)
+    throws BankAccountException, AccountInactiveException, InsufficientFundsException {
+        AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
+        checkAccountIsActive(bankAccEntity);
+
+        AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(
+            () -> (getBankAccountPersionalInfoNotFound())
+        );
+
+        CurrencyEntity withdrawalCurrency = currencyRepo.findById(currencyId).orElseThrow(
+            () -> (getBankAccountCurrencyNotFound())
+        );
+
+        BigDecimal finalSum = sum;
+        if(!bankAccEntity.getCurrency().getId().equals(withdrawalCurrency.getId())) {
+            CurrencyConversionId currencyConversionId = new CurrencyConversionId(withdrawalCurrency.getId(), bankAccEntity.getCurrency().getId());
+            CurrencyConversionEntity currencyConversionRateEntity = currencyConversionRepo.findById(currencyConversionId).orElseThrow(
+                () -> (getBankAccountCurrencyConvRateNotFound())
+            );
+
+            finalSum = sum.multiply(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateNumerator()))
+                            .divide(BigDecimal.valueOf(currencyConversionRateEntity.getMultRateDenominator()));
+        }
+
+        if (bankAccEntity.getBankSum().compareTo(finalSum) < 0) {
+            throw new InsufficientFundsException("Insufficient funds in the account.");
+        }
+
+        WithdrawalHistoryEntity withdrawalRecord = new WithdrawalHistoryEntity(null,
+                                                                    clientAccEntity, 
+                                                                    bankAccEntity, 
+                                                                    null, 
+                                                                    sum, 
+                                                                    withdrawalCurrency, 
+                                                                    finalSum, 
+                                                                    LocalDateTime.now());
+        withdrawalRecord = withdrawalHistoryRepo.saveAndFlush(withdrawalRecord);
+        bankAccEntity.setBankSum(bankAccEntity.getBankSum().subtract(finalSum));
+        accountInformationRepo.saveAndFlush(bankAccEntity);
+
+        return WithdrawalHistoryMapper.INSTANCE.entityToDto(withdrawalRecord);
+    }
+
     
     @Transactional
     public TransactionHistoryDTO processTransaction(Long fromBankAccountId, Long fromClientId, Long toBankAccountId, Long toClientId, BigDecimal sum) 
-    throws EntityNotFoundException {
-        AgentInformationEntity fromAgentEntity = agentInfoRepo.findById(fromClientId).orElseThrow();
-        AgentInformationEntity toAgentEntity = agentInfoRepo.findById(toClientId).orElseThrow();
-        AccountInformationEntity fromBankAccount = accountInformationRepo.findById(fromBankAccountId).orElseThrow();
-        AccountInformationEntity toBankAccount = accountInformationRepo.findById(toBankAccountId).orElseThrow();
+    throws BankAccountException, AccountInactiveException, InsufficientFundsException {
+        AgentInformationEntity fromAgentEntity = agentInfoRepo.findById(fromClientId).orElseThrow(
+            () -> (new BankAccountException("from", true, false, false, false))
+        );
+        AgentInformationEntity toAgentEntity = agentInfoRepo.findById(toClientId).orElseThrow(
+            () -> (new BankAccountException("to", true, false, false, false))
+        );
+        AccountInformationEntity fromBankAccount = accountInformationRepo.findById(fromBankAccountId).orElseThrow(
+            () -> (new BankAccountException("from", false, true, false, false))
+        );
+        AccountInformationEntity toBankAccount = accountInformationRepo.findById(toBankAccountId).orElseThrow(
+            () -> (new BankAccountException("to", false, true, false, false))
+        );
 
         WithdrawalHistoryEntity withdrawalCheck = WithdrawalHistoryMapper.INSTANCE.dtoToEntity(
-            this.withdrawal(fromBankAccountId, fromClientId, sum, fromBankAccount.getCurrency().getId()));
+            this.withdrawal(fromBankAccountId, fromClientId, sum, fromBankAccount.getCurrency().getId())
+        );
 
         DepositHistoryEntity depositCheck = DepositHistoryMapper.INSTANCE.dtoToEntity(
             this.deposit(toBankAccountId, toClientId, sum, fromBankAccount.getCurrency().getId())
         );
 
         TransactionHistoryId transactionId = new TransactionHistoryId(withdrawalCheck.getId(), depositCheck.getId());
-        TransactionHistoryEntity transaction = new TransactionHistoryEntity(transactionId,
-        depositCheck, withdrawalCheck, null, null, LocalDateTime.now(), LocalDateTime.now());
+        TransactionHistoryEntity transaction = new TransactionHistoryEntity(
+            transactionId, depositCheck, withdrawalCheck, 
+            null, null, LocalDateTime.now(), LocalDateTime.now()
+        );
 
         return TransactionHistoryMapper.INSTANCE.entityToDto(transactionHistoryRepo.save(transaction));
     }
 
     @Transactional
-    public AccountInformationDTO addOwner(Long bankAccountId, Long clientAccountId, String relationShip) throws EntityNotFoundException {
-        AgentInformationEntity agent = agentInfoRepo.findById(clientAccountId).orElseThrow();
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public AccountInformationDTO addOwner(Long bankAccountId, Long clientAccountId, String relationShip)
+    throws BankAccountException, AccountInactiveException {
+        AgentInformationEntity agent = agentInfoRepo.findById(clientAccountId).orElseThrow(
+            () -> (getBankAccountPersionalInfoNotFound())
+        );
+        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
+
+        checkAccountIsActive(bankAccount);
 
         Client_AccountJunctionId client_accountId = new Client_AccountJunctionId(clientAccountId, bankAccountId);
         if(!clientAccountJuncRepo.existsById(client_accountId)) {
@@ -212,9 +255,16 @@ public class BankAccountService {
     }
     
     @Transactional
-    public AccountInformationDTO removeOwner(Long bankAccountId, Long clientAccountId) throws EntityNotFoundException {
-        AgentInformationEntity agent = agentInfoRepo.findById(clientAccountId).orElseThrow();
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public AccountInformationDTO removeOwner(Long bankAccountId, Long clientAccountId) 
+    throws BankAccountException, AccountInactiveException {
+        AgentInformationEntity agent = agentInfoRepo.findById(clientAccountId).orElseThrow(
+            () -> (getBankAccountPersionalInfoNotFound())
+        );
+        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
+
+        checkAccountIsActive(bankAccount);
 
         Client_AccountJunctionId client_accountId = new Client_AccountJunctionId(clientAccountId, bankAccountId);
         if(!clientAccountJuncRepo.existsById(client_accountId)) {
@@ -224,8 +274,10 @@ public class BankAccountService {
         return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.findById(bankAccountId).get());
     }
 
-    public List<AgentInformationDTO> getOwners(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public List<AgentInformationDTO> getOwners(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
         List<Client_AccountJunctionEntity> client_accountLinks = clientAccountJuncRepo.findAllByAccountId(bankAccount.getId());
         ArrayList<AgentInformationDTO> result = new ArrayList<>();
         for(Client_AccountJunctionEntity client_account : client_accountLinks) {
@@ -238,21 +290,27 @@ public class BankAccountService {
     //     return null;
     // }
     @Transactional
-    public AccountInformationDTO deactivate(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public AccountInformationDTO deactivate(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+        );
         bankAccount.setIsActive(false);
         return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
     }
     
     @Transactional
-    public AccountInformationDTO activate(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public AccountInformationDTO activate(Long bankAccountId) throws BankAccountException {
+    AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+        () -> getBankAccountInfoNotFound()
+    );
         bankAccount.setIsActive(true);
         return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
     }
 
-    public List<TransactionHistoryDTO> getTransactionHistory(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public List<TransactionHistoryDTO> getTransactionHistory(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> getBankAccountInfoNotFound()
+        );
         List<TransactionHistoryEntity> search_result = transactionHistoryRepo.findAllByDepositAccountInformationIdOrWithdrawalAccountInformationId(bankAccountEntity.getId());
         ArrayList<TransactionHistoryDTO> result = new ArrayList<>();
 
@@ -262,8 +320,10 @@ public class BankAccountService {
         return result;
     }
     
-    public List<DepositHistoryDTO> getDepositHistory(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public List<DepositHistoryDTO> getDepositHistory(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> getBankAccountInfoNotFound()
+        );
         List<DepositHistoryEntity> search_result = depositHistoryRepo.findAllByAccountInformationId(bankAccountEntity.getId());
         ArrayList<DepositHistoryDTO> result = new ArrayList<>();
 
@@ -273,8 +333,10 @@ public class BankAccountService {
         return result;
     }
     
-    public List<WithdrawalHistoryDTO> getWithdrawalsHistory(Long bankAccountId) throws EntityNotFoundException {
-        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow();
+    public List<WithdrawalHistoryDTO> getWithdrawalsHistory(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> getBankAccountInfoNotFound()
+        );
         List<WithdrawalHistoryEntity> search_result = withdrawalHistoryRepo.findAllByAccountInformationId(bankAccountEntity.getId());
         ArrayList<WithdrawalHistoryDTO> result = new ArrayList<>();
 
@@ -285,9 +347,13 @@ public class BankAccountService {
     }
     
     @Transactional
-    public AccountInformationDTO createBankAccount(Long accountTypeId, Long currencyId) throws EntityNotFoundException {
-        AccountTypeEntity accountType = accountTypeRepo.findById(accountTypeId).orElseThrow();
-        CurrencyEntity currency = currencyRepo.findById(currencyId).orElseThrow();
+    public AccountInformationDTO createBankAccount(Long accountTypeId, Long currencyId) throws BankAccountException, EntityNotFoundException {
+        AccountTypeEntity accountType = accountTypeRepo.findById(accountTypeId).orElseThrow(
+            () -> (new EntityNotFoundException(String.format("Account type not found for %d", accountTypeId)))
+        );
+        CurrencyEntity currency = currencyRepo.findById(currencyId).orElseThrow(
+            () -> getBankAccountCurrencyNotFound()
+        );
 
         AccountInformationEntity bankAccount = new AccountInformationEntity(null, false, new BigDecimal(0), currency, accountType);
         return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
