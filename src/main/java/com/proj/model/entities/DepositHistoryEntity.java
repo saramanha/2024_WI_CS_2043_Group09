@@ -13,6 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.CascadeType;
 
+/**
+ * Represents the entity mapping for deposit history.
+ */
 @Entity
 @Table(name = "deposit_history")
 public class DepositHistoryEntity {
@@ -46,6 +49,18 @@ public class DepositHistoryEntity {
     @Column(name = "date_time_initiated")
     private LocalDateTime dateTimeInitiated;
 
+    /**
+     * Constructs a deposit history entity with the provided parameters.
+     * 
+     * @param id                   The deposit ID.
+     * @param agent                The agent associated with the deposit.
+     * @param accountInformation   The account information associated with the deposit.
+     * @param transactionStatus    The transaction status associated with the deposit.
+     * @param sumInitial           The initial sum of the deposit.
+     * @param depositCurrency      The currency of the deposit.
+     * @param sumConverted         The converted sum of the deposit.
+     * @param dateTimeInitiated    The date and time when the deposit was initiated.
+     */
     public DepositHistoryEntity(Long id, AgentInformationEntity agent, AccountInformationEntity accountInformation,
             TransactionStatusEntity transactionStatus, BigDecimal sumInitial, CurrencyEntity depositCurrency,
             BigDecimal sumConverted, LocalDateTime dateTimeInitiated) {
@@ -59,8 +74,13 @@ public class DepositHistoryEntity {
         this.dateTimeInitiated = dateTimeInitiated;
     }
 
+    /**
+     * Default constructor.
+     */
     public DepositHistoryEntity() {
     }
+
+    // Getters and setters for the class attributes
 
     public Long getId() {
         return id;
