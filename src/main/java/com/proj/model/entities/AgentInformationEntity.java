@@ -12,9 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Represents an agent's information entity.
+ */
 @Entity
 @Table(name = "agent_information")
 public class AgentInformationEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "agent_id")
@@ -67,6 +71,25 @@ public class AgentInformationEntity {
     @JoinColumn(name = "role_id")
     private RoleEntity role;
 
+    /**
+     * Constructs a new agent information entity.
+     * 
+     * @param id                The unique identifier of the agent.
+     * @param firstName         The first name of the agent.
+     * @param lastName          The last name of the agent.
+     * @param middleName        The middle name of the agent.
+     * @param additionalNames   Any additional names of the agent.
+     * @param dateOfRegistration    The date when the agent was registered.
+     * @param primaryAddress    The primary address of the agent.
+     * @param secondaryAddress  The secondary address of the agent.
+     * @param email             The email address of the agent.
+     * @param selfIdentGender   The gender entity representing the gender identity of the agent.
+     * @param sex               The biological sex of the agent.
+     * @param dateOfBirth       The date of birth of the agent.
+     * @param socialSecurityNumber  The social security number of the agent.
+     * @param bankBranch        The bank branch entity associated with the agent.
+     * @param role              The role entity representing the role of the agent.
+     */
     public AgentInformationEntity(Long id, String firstName, String lastName, String middleName, String additionalNames,
             LocalDate dateOfRegistration, AddressEntity primaryAddress, AddressEntity secondaryAddress, String email,
             GenderEntity selfIdentGender, char sex, LocalDate dateOfBirth, Long socialSecurityNumber, BankBranchEntity bankBranch,
@@ -88,8 +111,13 @@ public class AgentInformationEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
+    /**
+     * Default constructor.
+     */
     public AgentInformationEntity() {
     }
+
+    // Getters and setters
 
     public Long getId() {
         return id;
