@@ -4,10 +4,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.proj.model.embeddables.TransactionHistoryId;
 import com.proj.model.entities.TransactionHistoryEntity;
 
+@Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistoryEntity, TransactionHistoryId>{
     @Query("SELECT t FROM TransactionHistoryEntity t WHERE t.deposit.agent.id = :agentId OR t.withdrawal.agent.id = :agentId")
     List<TransactionHistoryEntity> findAllByDepositAgentIdOrWithdrawalAgentId(@Param("agentId") Long agentId);
