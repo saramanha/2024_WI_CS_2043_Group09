@@ -1,4 +1,4 @@
-// TODO: similar excetion system to the BankAccountService
+// TODO: similar excetion system to the BankAccountService -> Done
 
 package com.proj.model.services;
 
@@ -114,184 +114,271 @@ public class ClientService {
     // }
     
     @Transactional
-    public Client updateFirstName(Client client, String newName) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        personalInfoE.setFirstName(newName);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateLastName(Client client, String newName) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        personalInfoE.setLastName(newName);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateMiddleName(Client client, String newName) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        personalInfoE.setMiddleName(newName);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateAdditionalName(Client client, String newName, boolean doAppend) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        if(doAppend) {
-            personalInfoE.setAdditionalNames(personalInfoE.getAdditionalNames().concat(newName));
+    public Client updateFirstName(Client client, String newName) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            personalInfoE.setFirstName(newName);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update first name: " + ex.getMessage());
         }
-        else {
-            personalInfoE.setAdditionalNames(newName);
-        }
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
     }
+
+    @Transactional
+    public Client updateLastName(Client client, String newLastName) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            personalInfoE.setLastName(newLastName);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update last name: " + ex.getMessage());
+        }
+    }
+
+    @Transactional
+    public Client updateMiddleName(Client client, String newMiddleName) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            personalInfoE.setMiddleName(newMiddleName);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update middle name: " + ex.getMessage());
+        }
+    }
+
+    @Transactional
+    public Client updateAdditionalName(Client client, String newAdditionalName, boolean doAppend) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            if (doAppend) {
+                personalInfoE.setAdditionalNames(personalInfoE.getAdditionalNames().concat(newAdditionalName));
+            } else {
+                personalInfoE.setAdditionalNames(newAdditionalName);
+            }
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update additional name: " + ex.getMessage());
+        }
+    }
+
     
     // Assumes that the newAddress is really new
     @Transactional
-    public Client updatePrimaryAddress(Client client, Long addressId) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        AddressEntity address = addressRepo.findById(addressId).orElseThrow();
-        personalInfoE.setPrimaryAddress(address);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
+    public Client updatePrimaryAddress(Client client, Long addressId) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AddressEntity address = addressRepo.findById(addressId).orElseThrow(() -> new AddressNotFoundException("Address not found"));
+            personalInfoE.setPrimaryAddress(address);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update primary address: " + ex.getMessage());
+        }
     }
     
     @Transactional
-    public Client updateSecondaryAddress(Client client, Long addressId) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        AddressEntity address = addressRepo.findById(addressId).orElseThrow();
-        personalInfoE.setSecondaryAddress(address);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
+    public Client updateSecondaryAddress(Client client, Long addressId) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AddressEntity address = addressRepo.findById(addressId).orElseThrow(() -> new AddressNotFoundException("Address not found"));
+            personalInfoE.setSecondaryAddress(address);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update secondary address: " + ex.getMessage());
+        }
     }
     
     @Transactional
-    public Client updateEmail(Client client, String email) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        personalInfoE.setEmail(email);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateGender(Client client, Long genderId) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        GenderEntity genderE = genderRepo.findById(genderId).orElseThrow();
-        personalInfoE.setSelfIdentGender(genderE);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateSex(Client client, char newSex) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        if(newSex != 'F' || newSex != 'M') throw new IllegalArgumentException("M or F");
-        personalInfoE.setSex(newSex);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateRole(Client client, Long roleId) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        RoleEntity roleE = roleRepo.findById(roleId).orElseThrow();
-        personalInfoE.setRole(roleE);
-        client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
-        return client;
-    }
-
-    @Transactional
-    public Client updateBankAccounts(Client client) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        List<AccountInformationEntity> accounts = clientBankAccountJuncRepo.findAllAccountsByAgentId(personalInfoE.getId()); 
-        ArrayList<AccountInformationDTO> bankAccountsList = new ArrayList<>();
-        for (AccountInformationEntity i : accounts) {
-            bankAccountsList.add(AccountInformationMapper.INSTANCE.entityToDto(i));
+    public Client updateEmail(Client client, String email) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            personalInfoE.setEmail(email);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update email: " + ex.getMessage());
         }
-        client.setAssociatedBankAccounts(bankAccountsList);
-        return client;
+    }
+
+    @Transactional
+    public Client updateGender(Client client, Long genderId) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            GenderEntity genderE = genderRepo.findById(genderId).orElseThrow(() -> new GenderNotFoundException("Gender not found"));
+            personalInfoE.setSelfIdentGender(genderE);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update gender: " + ex.getMessage());
+        }
+    }
+
+    @Transactional
+    public Client updateSex(Client client, char newSex) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            if (newSex != 'F' && newSex != 'M') {
+                throw new IllegalArgumentException("Sex should be 'F' or 'M'");
+            }
+            personalInfoE.setSex(newSex);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update sex: " + ex.getMessage());
+        }
+    }
+
+    @Transactional
+    public Client updateRole(Client client, Long roleId) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            RoleEntity roleE = roleRepo.findById(roleId).orElseThrow(() -> new RoleNotFoundException("Role not found"));
+            personalInfoE.setRole(roleE);
+            client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update role: " + ex.getMessage());
+        }
+    }
+
+    @Transactional
+    public Client updateBankAccounts(Client client) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            List<AccountInformationEntity> accounts = clientBankAccountJuncRepo.findAllAccountsByAgentId(personalInfoE.getId());
+            ArrayList<AccountInformationDTO> bankAccountsList = new ArrayList<>();
+            for (AccountInformationEntity i : accounts) {
+                bankAccountsList.add(AccountInformationMapper.INSTANCE.entityToDto(i));
+            }
+            client.setAssociatedBankAccounts(bankAccountsList);
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update bank accounts: " + ex.getMessage());
+        }
     }
     
     @Transactional
-    public Client addBankAccount(Client client, Long bankAccountId, String relationship) throws EntityNotFoundException {
-        AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        AccountInformationEntity bankAccountE = accountInfoRepo.findById(bankAccountId).orElseThrow();
-        
-        Client_AccountJunctionId client_accountId = new Client_AccountJunctionId(personalInfoE.getId(), bankAccountE.getId());
-        Client_AccountJunctionEntity client_accountJunction = new Client_AccountJunctionEntity(client_accountId, personalInfoE, bankAccountE, relationship);
-        clientBankAccountJuncRepo.save(client_accountJunction);
-
-        return updateBankAccounts(client);
+    public Client addBankAccount(Client client, Long bankAccountId, String relationship) {
+        try {
+            AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AccountInformationEntity bankAccountE = accountInfoRepo.findById(bankAccountId)
+                    .orElseThrow(() -> new AccountNotFoundException("Bank account not found"));
+    
+            Client_AccountJunctionId client_accountId = new Client_AccountJunctionId(personalInfoE.getId(), bankAccountE.getId());
+            Client_AccountJunctionEntity client_accountJunction = new Client_AccountJunctionEntity(client_accountId, personalInfoE, bankAccountE, relationship);
+            clientBankAccountJuncRepo.save(client_accountJunction);
+    
+            return updateBankAccounts(client);
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to add bank account: " + ex.getMessage());
+        }
     }
     
-    public Client updateDepositHistory(Client client, Integer length, Long bankAccountId) throws EntityNotFoundException {
-        // Negative values for <bankAccountId> will fetch all deposits for the given client up to <length>
-        AgentInformationEntity personalInformationEntity = agentInfoRepo.findById(client.getPersonalInfo().getId()).orElseThrow();
-        AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId).orElseThrow();
-        ArrayList<DepositHistoryDTO> result = new ArrayList<>();
-        List<DepositHistoryEntity> depositEntitiesList;
-        if(bankAccountId >= 0) {
-            depositEntitiesList = depositRepo.findAllByAccountInformationId(bankAccountEntity.getId());
+    public Client updateDepositHistory(Client client, Integer length, Long bankAccountId) {
+        try {
+            AgentInformationEntity personalInformationEntity = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId)
+                    .orElseThrow(() -> new AccountNotFoundException("Bank account not found"));
+            ArrayList<DepositHistoryDTO> result = new ArrayList<>();
+            List<DepositHistoryEntity> depositEntitiesList;
+    
+            if (bankAccountId >= 0) {
+                depositEntitiesList = depositRepo.findAllByAccountInformationId(bankAccountEntity.getId());
+            } else {
+                depositEntitiesList = depositRepo.findAllByAgentId(personalInformationEntity.getId());
+            }
+    
+            Integer counter = 0;
+            for (DepositHistoryEntity i : depositEntitiesList) {
+                if (counter >= length && length >= 0) {
+                    break;
+                }
+                result.add(DepositHistoryMapper.INSTANCE.entityToDto(i));
+                counter++;
+            }
+            client.setAssociatedDeposits(result);
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update deposit history: " + ex.getMessage());
         }
-        else {
-            depositEntitiesList = depositRepo.findAllByAgentId(personalInformationEntity.getId());
-        }
-
-        Integer counter = 0;
-        for (DepositHistoryEntity i : depositEntitiesList) {
-            if(counter >= length) break;
-            result.add(DepositHistoryMapper.INSTANCE.entityToDto(i));
-        }
-        client.setAssociatedDeposits(result);
-        return client;
     }
     
-    public Client updateWithdrawalHistory(Client client, Integer length, Long bankAccountId) throws EntityNotFoundException {
-        // Negative values for <bankAccountId> will fetch all withdrawals for the given client up to <length>
-        AgentInformationEntity personalInformationEntity = agentInfoRepo.getById(client.getPersonalInfo().getId());
-        AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId).orElseThrow();
-        ArrayList<WithdrawalHistoryDTO> result = new ArrayList<>();
-        List<WithdrawalHistoryEntity> withdrawalEntitiesList;
-        if(bankAccountId >= 0) {
-            withdrawalEntitiesList = withdrawalRepo.findAllByAccountInformationId(bankAccountEntity.getId());
+    public Client updateWithdrawalHistory(Client client, Integer length, Long bankAccountId) {
+        try {
+            AgentInformationEntity personalInformationEntity = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId)
+                    .orElseThrow(() -> new AccountNotFoundException("Bank account not found"));
+            ArrayList<WithdrawalHistoryDTO> result = new ArrayList<>();
+            List<WithdrawalHistoryEntity> withdrawalEntitiesList;
+    
+            if (bankAccountId >= 0) {
+                withdrawalEntitiesList = withdrawalRepo.findAllByAccountInformationId(bankAccountEntity.getId());
+            } else {
+                withdrawalEntitiesList = withdrawalRepo.findAllByAgentId(personalInformationEntity.getId());
+            }
+    
+            Integer counter = 0;
+            for (WithdrawalHistoryEntity i : withdrawalEntitiesList) {
+                if (counter >= length && length >= 0) {
+                    break;
+                }
+                result.add(WithdrawalHistoryMapper.INSTANCE.entityToDto(i));
+                counter++;
+            }
+            client.setAssociatedWithdrawals(result);
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update withdrawal history: " + ex.getMessage());
         }
-        else {
-            withdrawalEntitiesList = withdrawalRepo.findAllByAgentId(personalInformationEntity.getId());
-        }
-
-        Integer counter = 0;
-        for (WithdrawalHistoryEntity i : withdrawalEntitiesList) {
-            if(counter >= length) break;
-            result.add(WithdrawalHistoryMapper.INSTANCE.entityToDto(i));
-        }
-        client.setAssociatedWithdrawals(result);
-        return client;
     }
     
-    public Client updateTransactionHistory(Client client, Integer length, Long bankAccountId) throws EntityNotFoundException {
-        // Negative values for <bankAccountId> will fetch all transaction for the given client up to <length>
-        AgentInformationEntity personalInformationEntity = agentInfoRepo.getById(client.getPersonalInfo().getId());
-        AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId).orElseThrow();
-        ArrayList<TransactionHistoryDTO> result = new ArrayList<>();
-        List<TransactionHistoryEntity> transactionEntitiesList;
-        if(bankAccountId >= 0) {
-            transactionEntitiesList = transactionHistoryRepo.findAllByDepositAccountInformationIdOrWithdrawalAccountInformationId(bankAccountEntity.getId());
+    public Client updateTransactionHistory(Client client, Integer length, Long bankAccountId) {
+        try {
+            AgentInformationEntity personalInformationEntity = agentInfoRepo.findById(client.getPersonalInfo().getId())
+                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+            AccountInformationEntity bankAccountEntity = accountInfoRepo.findById(bankAccountId)
+                    .orElseThrow(() -> new AccountNotFoundException("Bank account not found"));
+            ArrayList<TransactionHistoryDTO> result = new ArrayList<>();
+            List<TransactionHistoryEntity> transactionEntitiesList;
+    
+            if (bankAccountId >= 0) {
+                transactionEntitiesList = transactionHistoryRepo.findAllByDepositAccountInformationIdOrWithdrawalAccountInformationId(bankAccountEntity.getId());
+            } else {
+                transactionEntitiesList = transactionHistoryRepo.findAllByDepositAgentIdOrWithdrawalAgentId(personalInformationEntity.getId());
+            }
+    
+            Integer counter = 0;
+            for (TransactionHistoryEntity i : transactionEntitiesList) {
+                if (counter >= length && length >= 0) {
+                    break;
+                }
+                result.add(TransactionHistoryMapper.INSTANCE.entityToDto(i));
+                counter++;
+            }
+            client.setAssociatedTransactions(result);
+            return client;
+        } catch (EntityNotFoundException ex) {
+            throw new ClientServiceException("Failed to update transaction history: " + ex.getMessage());
         }
-        else {
-            transactionEntitiesList = transactionHistoryRepo.findAllByDepositAgentIdOrWithdrawalAgentId(personalInformationEntity.getId());
-        }
-
-        Integer counter = 0;
-        for (TransactionHistoryEntity i : transactionEntitiesList) {
-            if(counter >= length) break;
-            result.add(TransactionHistoryMapper.INSTANCE.entityToDto(i));
-        }
-        client.setAssociatedTransactions(result);
-        return client;
     }
 
     // TODO: fix role
