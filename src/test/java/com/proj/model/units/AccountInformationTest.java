@@ -37,13 +37,14 @@ public class AccountInformationTest {
         currRepo.saveAndFlush(currency);
         accTypeRepo.saveAndFlush(accType);
         
-        AccountInformationEntity newAccountInfo = new AccountInformationEntity(null, false, new BigDecimal(0), currency, accType);
+        AccountInformationEntity newAccountInfo = new AccountInformationEntity(null, false, new BigDecimal("0.00"), currency, accType);
         AccountInformationEntity savedAccount = accInfoRepo.saveAndFlush(newAccountInfo);
 
         Optional<AccountInformationEntity> retrievedAccount = accInfoRepo.findById(savedAccount.getId());
 
         assertNotNull(retrievedAccount.get(), "Failed to retrieve new bank account");
 
+        assertEquals(savedAccount.getBankSum(), retrievedAccount.get().getBankSum(), "Oops, somebody ruined the bank sum system");
         assertEquals(savedAccount, retrievedAccount.get(), "retrieved account does not equal to the saved account");
     }
 }

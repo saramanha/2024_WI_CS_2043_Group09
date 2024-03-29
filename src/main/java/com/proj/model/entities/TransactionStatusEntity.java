@@ -130,4 +130,9 @@ public class TransactionStatusEntity {
 			return false;
 		return true;
 	}
+
+    @Override
+    public String toString() {
+        return "TransactionStatusEntity [id=" + id + ", description=" + description + ", name=" + name + "]";
+    }
 }

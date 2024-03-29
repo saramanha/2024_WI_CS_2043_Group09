@@ -98,6 +98,6 @@ public class AgentInformationTest {
         Optional<AgentInformationEntity> retrievedAgent = agentInfoRepo.findById(savedAgentInfo.getId());
 
         assertNotNull(retrievedAgent.get(), "Failed to retrieve the agent information");
-        assertEquals(savedAgentInfo, retrievedAgent.get(), "Not equal");
+        assertEquals(savedAgentInfo, retrievedAgent.get(), "Saved agent and retrieved agent are not equal");
     }
 }

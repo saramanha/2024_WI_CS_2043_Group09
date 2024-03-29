@@ -133,4 +133,10 @@ public class CurrencyEntity {
 			return false;
 		return true;
 	}
+
+    @Override
+    public String toString() {
+        return "CurrencyEntity [id=" + id + ", currencyName=" + currencyName + ", currencyAcronym=" + currencyAcronym
+                + "]";
+    }
 }

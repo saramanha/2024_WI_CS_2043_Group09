@@ -214,4 +214,10 @@ public class AccountInformationEntity {
 			return false;
 		return true;
 	}
+
+    @Override
+    public String toString() {
+        return "AccountInformationEntity [id=" + id + ", isActive=" + isActive + ", bankSum=" + bankSum + ", currency="
+                + currency + ", accountType=" + accountType + "]";
+    }
 }

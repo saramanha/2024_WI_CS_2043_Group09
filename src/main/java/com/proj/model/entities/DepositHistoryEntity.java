@@ -212,4 +212,11 @@ public class DepositHistoryEntity {
 			return false;
 		return true;
 	}
+
+    @Override
+    public String toString() {
+        return "DepositHistoryEntity [id=" + id + ", agent=" + agent + ", accountInformation=" + accountInformation
+                + ", transactionStatus=" + transactionStatus + ", sumInitial=" + sumInitial + ", depositCurrency="
+                + depositCurrency + ", sumConverted=" + sumConverted + ", dateTimeInitiated=" + dateTimeInitiated + "]";
+    }
 }

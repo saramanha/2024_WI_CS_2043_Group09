@@ -164,6 +164,12 @@ public class AccountTypeEntity {
 			return false;
 		return true;
 	}
+
+    @Override
+    public String toString() {
+        return "AccountTypeEntity [id=" + id + ", name=" + name + ", currentInterestRate=" + currentInterestRate
+                + ", dateEffective=" + dateEffective + "]";
+    }
 }
 
 
