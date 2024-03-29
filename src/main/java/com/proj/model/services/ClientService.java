@@ -325,4 +325,61 @@ public class ClientService {
         newClient.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(currentAgent)));
         return newClient;
     }
+    // Function to generate a transaction report
+    public String generateTransactionReport(Client client) {
+        StringBuilder report = new StringBuilder();
+        report.append("Transaction Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        
+        List<TransactionHistoryDTO> associatedTransactions = client.getAssociatedTransactions();
+        if (associatedTransactions != null && !associatedTransactions.isEmpty()) {
+            for (TransactionHistoryDTO transaction : associatedTransactions) {
+                report.append("Date: ").append(transaction.getDate())
+                      .append("\tAmount: ").append(transaction.getAmount())
+                      .append("\tType: ").append(transaction.getType())
+                      .append("\n");
+            }
+        } else {
+            report.append("No transaction history available.\n");
+        }
+
+        return report.toString();
+    }
+
+    // Function to generate a deposit report
+    public String generateDepositReport(Client client) {
+        StringBuilder report = new StringBuilder();
+        report.append("Deposit Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        
+        List<DepositHistoryDTO> associatedDeposits = client.getAssociatedDeposits();
+        if (associatedDeposits != null && !associatedDeposits.isEmpty()) {
+            for (DepositHistoryDTO deposit : associatedDeposits) {
+                report.append("Date: ").append(deposit.getDate())
+                      .append("\tAmount: ").append(deposit.getAmount())
+                      .append("\n");
+            }
+        } else {
+            report.append("No deposit history available.\n");
+        }
+
+        return report.toString();
+    }
+
+    // Function to generate a withdrawal report
+    public String generateWithdrawalReport(Client client) {
+        StringBuilder report = new StringBuilder();
+        report.append("Withdrawal Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        
+        List<WithdrawalHistoryDTO> associatedWithdrawals = client.getAssociatedWithdrawals();
+        if (associatedWithdrawals != null && !associatedWithdrawals.isEmpty()) {
+            for (WithdrawalHistoryDTO withdrawal : associatedWithdrawals) {
+                report.append("Date: ").append(withdrawal.getDate())
+                      .append("\tAmount: ").append(withdrawal.getAmount())
+                      .append("\n");
+            }
+        } else {
+            report.append("No withdrawal history available.\n");
+        }
+
+        return report.toString();
+    }
 }
