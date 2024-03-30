@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.proj.model.repositories.AgentInformationRepository;
 import com.proj.model.dtos.AgentInformationDTO;
+import com.proj.model.mappers.AgentInformationMapper;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +19,7 @@ public class ClientSearchService {
     }
 
     public List<AgentInformationDTO> searchClientsByLastName(String lastName) {
-        List<AgentInformationDTO> clients = agentInformationRepository.findByLastName(lastName)
+        List<AgentInformationDTO> clients = agentInformationRepository.findAllByLastName(lastName)
                                                 .stream()
                                                 .map(agent -> AgentInformationMapper.INSTANCE.entityToDto(agent))
                                                 .collect(Collectors.toList());

@@ -32,6 +32,12 @@ import com.proj.model.entities.GenderEntity;
 import com.proj.model.entities.RoleEntity;
 import com.proj.model.entities.TransactionHistoryEntity;
 import com.proj.model.entities.WithdrawalHistoryEntity;
+import com.proj.model.exceptions.AccountNotFoundException;
+import com.proj.model.exceptions.AddressNotFoundException;
+import com.proj.model.exceptions.ClientNotFoundException;
+import com.proj.model.exceptions.ClientServiceException;
+import com.proj.model.exceptions.GenderNotFoundException;
+import com.proj.model.exceptions.RoleNotFoundException;
 import com.proj.model.mappers.AccountInformationMapper;
 import com.proj.model.mappers.AddressMapper;
 import com.proj.model.mappers.AgentInformationMapper;
@@ -415,14 +421,14 @@ public class ClientService {
     // Function to generate a transaction report
     public String generateTransactionReport(Client client) {
         StringBuilder report = new StringBuilder();
-        report.append("Transaction Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        report.append("Transaction Report for Client: ").append(client.getPersonalInfo().getFirstName()).append("\n\n");
         
         List<TransactionHistoryDTO> associatedTransactions = client.getAssociatedTransactions();
         if (associatedTransactions != null && !associatedTransactions.isEmpty()) {
             for (TransactionHistoryDTO transaction : associatedTransactions) {
-                report.append("Date: ").append(transaction.getDate())
-                      .append("\tAmount: ").append(transaction.getAmount())
-                      .append("\tType: ").append(transaction.getType())
+                report.append("Date: ").append(transaction.getTransactionInitiationDateTime())
+                      .append("\tAmount: ").append(transaction.getDeposit().getSumConverted())
+                      .append("\tType: ").append(transaction.getTransactionType())
                       .append("\n");
             }
         } else {
@@ -435,13 +441,13 @@ public class ClientService {
     // Function to generate a deposit report
     public String generateDepositReport(Client client) {
         StringBuilder report = new StringBuilder();
-        report.append("Deposit Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        report.append("Deposit Report for Client: ").append(client.getPersonalInfo().getFirstName()).append("\n\n");
         
         List<DepositHistoryDTO> associatedDeposits = client.getAssociatedDeposits();
         if (associatedDeposits != null && !associatedDeposits.isEmpty()) {
             for (DepositHistoryDTO deposit : associatedDeposits) {
-                report.append("Date: ").append(deposit.getDate())
-                      .append("\tAmount: ").append(deposit.getAmount())
+                report.append("Date: ").append(deposit.getDateTimeInitiated())
+                      .append("\tAmount: ").append(deposit.getSumConverted())
                       .append("\n");
             }
         } else {
@@ -454,13 +460,13 @@ public class ClientService {
     // Function to generate a withdrawal report
     public String generateWithdrawalReport(Client client) {
         StringBuilder report = new StringBuilder();
-        report.append("Withdrawal Report for Client: ").append(client.getPersonalInfo().getName()).append("\n\n");
+        report.append("Withdrawal Report for Client: ").append(client.getPersonalInfo().getFirstName()).append("\n\n");
         
         List<WithdrawalHistoryDTO> associatedWithdrawals = client.getAssociatedWithdrawals();
         if (associatedWithdrawals != null && !associatedWithdrawals.isEmpty()) {
             for (WithdrawalHistoryDTO withdrawal : associatedWithdrawals) {
-                report.append("Date: ").append(withdrawal.getDate())
-                      .append("\tAmount: ").append(withdrawal.getAmount())
+                report.append("Date: ").append(withdrawal.getDateTimeInitiated())
+                      .append("\tAmount: ").append(withdrawal.getSumConverted())
                       .append("\n");
             }
         } else {
