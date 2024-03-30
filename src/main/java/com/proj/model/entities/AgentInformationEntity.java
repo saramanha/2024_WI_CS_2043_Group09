@@ -238,4 +238,110 @@ public class AgentInformationEntity {
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((middleName == null) ? 0 : middleName.hashCode());
+		result = prime * result + ((additionalNames == null) ? 0 : additionalNames.hashCode());
+		result = prime * result + ((dateOfRegistration == null) ? 0 : dateOfRegistration.hashCode());
+		result = prime * result + ((primaryAddress == null) ? 0 : primaryAddress.hashCode());
+		result = prime * result + ((secondaryAddress == null) ? 0 : secondaryAddress.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((selfIdentGender == null) ? 0 : selfIdentGender.hashCode());
+		result = prime * result + sex;
+		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+		result = prime * result + ((socialSecurityNumber == null) ? 0 : socialSecurityNumber.hashCode());
+		result = prime * result + ((bankBranch == null) ? 0 : bankBranch.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AgentInformationEntity other = (AgentInformationEntity) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (middleName == null) {
+			if (other.middleName != null)
+				return false;
+		} else if (!middleName.equals(other.middleName))
+			return false;
+		if (additionalNames == null) {
+			if (other.additionalNames != null)
+				return false;
+		} else if (!additionalNames.equals(other.additionalNames))
+			return false;
+		if (dateOfRegistration == null) {
+			if (other.dateOfRegistration != null)
+				return false;
+		} else if (!dateOfRegistration.equals(other.dateOfRegistration))
+			return false;
+		if (primaryAddress == null) {
+			if (other.primaryAddress != null)
+				return false;
+		} else if (!primaryAddress.equals(other.primaryAddress))
+			return false;
+		if (secondaryAddress == null) {
+			if (other.secondaryAddress != null)
+				return false;
+		} else if (!secondaryAddress.equals(other.secondaryAddress))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (selfIdentGender == null) {
+			if (other.selfIdentGender != null)
+				return false;
+		} else if (!selfIdentGender.equals(other.selfIdentGender))
+			return false;
+		if (sex != other.sex)
+			return false;
+		if (dateOfBirth == null) {
+			if (other.dateOfBirth != null)
+				return false;
+		} else if (!dateOfBirth.equals(other.dateOfBirth))
+			return false;
+		if (socialSecurityNumber == null) {
+			if (other.socialSecurityNumber != null)
+				return false;
+		} else if (!socialSecurityNumber.equals(other.socialSecurityNumber))
+			return false;
+		if (bankBranch == null) {
+			if (other.bankBranch != null)
+				return false;
+		} else if (!bankBranch.equals(other.bankBranch))
+			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
+		return true;
+	}
 }

@@ -165,4 +165,59 @@ public class AccountInformationEntity {
     public void setAccountType(AccountTypeEntity accountType) {
         this.accountType = accountType;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
+		result = prime * result + ((bankSum == null) ? 0 : bankSum.hashCode());
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + ((accountType == null) ? 0 : accountType.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccountInformationEntity other = (AccountInformationEntity) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isActive == null) {
+			if (other.isActive != null)
+				return false;
+		} else if (!isActive.equals(other.isActive))
+			return false;
+		if (bankSum == null) {
+			if (other.bankSum != null)
+				return false;
+		} else if (!bankSum.equals(other.bankSum))
+			return false;
+		if (currency == null) {
+			if (other.currency != null)
+				return false;
+		} else if (!currency.equals(other.currency))
+			return false;
+		if (accountType == null) {
+			if (other.accountType != null)
+				return false;
+		} else if (!accountType.equals(other.accountType))
+			return false;
+		return true;
+	}
+
+    @Override
+    public String toString() {
+        return "AccountInformationEntity [id=" + id + ", isActive=" + isActive + ", bankSum=" + bankSum + ", currency="
+                + currency + ", accountType=" + accountType + "]";
+    }
 }

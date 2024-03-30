@@ -96,4 +96,47 @@ public class CurrencyEntity {
     public void setCurrencyAcronym(String currencyAcronym) {
         this.currencyAcronym = currencyAcronym;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((currencyName == null) ? 0 : currencyName.hashCode());
+		result = prime * result + ((currencyAcronym == null) ? 0 : currencyAcronym.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CurrencyEntity other = (CurrencyEntity) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (currencyName == null) {
+			if (other.currencyName != null)
+				return false;
+		} else if (!currencyName.equals(other.currencyName))
+			return false;
+		if (currencyAcronym == null) {
+			if (other.currencyAcronym != null)
+				return false;
+		} else if (!currencyAcronym.equals(other.currencyAcronym))
+			return false;
+		return true;
+	}
+
+    @Override
+    public String toString() {
+        return "CurrencyEntity [id=" + id + ", currencyName=" + currencyName + ", currencyAcronym=" + currencyAcronym
+                + "]";
+    }
 }
