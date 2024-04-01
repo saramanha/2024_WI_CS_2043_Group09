@@ -51,10 +51,101 @@ public class CommandLineInterface {
         }
     }
 
-    private void updateClientInformation() {
-     
-    }
 
+    private void updateClientInformation() {
+        System.out.println("Enter client ID:");
+        Long clientId = scanner.nextLong();
+        scanner.nextLine();
+    
+        System.out.println("Choose information to update:");
+        System.out.println("1. First Name");
+        System.out.println("2. Last Name");
+        System.out.println("3. Primary Address");
+        System.out.println("4. Email");
+        System.out.println("5. Update Bank Accounts");
+        System.out.println("6. Update Deposit History");
+        System.out.println("7. Update Withdrawal History");
+        System.out.println("8. Update Transaction History");
+    
+        int updateChoice = scanner.nextInt();
+        scanner.nextLine();
+    
+        try {
+            Client client = clientSearchService.findClientById(clientId);
+            if (client != null) {
+                switch (updateChoice) {
+                    case 1:
+                        System.out.println("Enter new first name:");
+                        String newFirstName = scanner.nextLine();
+                        clientService.updateFirstName(client, newFirstName);
+                        System.out.println("First name updated successfully.");
+                        break;
+                    case 2:
+                        System.out.println("Enter new last name:");
+                        String newLastName = scanner.nextLine();
+                        clientService.updateLastName(client, newLastName);
+                        System.out.println("Last name updated successfully.");
+                        break;
+                    case 3:
+                        System.out.println("Enter new primary address ID:");
+                        Long primaryAddressId = scanner.nextLong();
+                        scanner.nextLine();
+                        clientService.updatePrimaryAddress(client, primaryAddressId);
+                        System.out.println("Primary address updated successfully.");
+                        break;
+                    case 4:
+                        System.out.println("Enter new email:");
+                        String newEmail = scanner.nextLine();
+                        clientService.updateEmail(client, newEmail);
+                        System.out.println("Email updated successfully.");
+                        break;
+                    case 5:
+                        System.out.println("Updating bank accounts...");
+                        clientService.updateBankAccounts(client);
+                        System.out.println("Bank accounts updated successfully.");
+                        break;
+                    case 6:
+                        System.out.println("Enter length of deposit history to fetch (Enter -1 to fetch all):");
+                        int depositLength = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Enter bank account ID (Enter -1 for all accounts):");
+                        Long depositBankAccountId = scanner.nextLong();
+                        scanner.nextLine();
+                        clientService.updateDepositHistory(client, depositLength, depositBankAccountId);
+                        System.out.println("Deposit history updated successfully.");
+                        break;
+                    case 7:
+                        System.out.println("Enter length of withdrawal history to fetch (Enter -1 to fetch all):");
+                        int withdrawalLength = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Enter bank account ID (Enter -1 for all accounts):");
+                        Long withdrawalBankAccountId = scanner.nextLong();
+                        scanner.nextLine();
+                        clientService.updateWithdrawalHistory(client, withdrawalLength, withdrawalBankAccountId);
+                        System.out.println("Withdrawal history updated successfully.");
+                        break;
+                    case 8:
+                        System.out.println("Enter length of transaction history to fetch (Enter -1 to fetch all):");
+                        int transactionLength = scanner.nextInt();
+                        scanner.nextLine();
+                        System.out.println("Enter bank account ID (Enter -1 for all accounts):");
+                        Long transactionBankAccountId = scanner.nextLong();
+                        scanner.nextLine();
+                        clientService.updateTransactionHistory(client, transactionLength, transactionBankAccountId);
+                        System.out.println("Transaction history updated successfully.");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+                System.out.println("Updated Client Information:");
+                System.out.println(client);
+            } else {
+                System.out.println("Client not found.");
+            }
+        } catch (ClientServiceException e) {
+            System.out.println("Failed to update client information: " + e.getMessage());
+        }
+    }
     private void addBankAccount() {
         System.out.println("Enter client ID:");
         Long clientId = scanner.nextLong();
