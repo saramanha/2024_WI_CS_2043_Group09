@@ -387,7 +387,6 @@ public class ClientService {
         }
     }
 
-    // TODO: fix role
     @Transactional
     public Client createNewClient(String firstName, String lastName, String middleName, String additionalNames,
                                   AddressDTO primaryAddress, AddressDTO secondaryAddress, String email,

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,6 +117,7 @@ public class BankAccountService {
         AccountInformationEntity bankAccEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
             () -> (getBankAccountInfoNotFound())
         );
+        
         checkAccountIsActive(bankAccEntity);
 
         AgentInformationEntity clientAccEntity = agentInfoRepo.findById(clientId).orElseThrow(
