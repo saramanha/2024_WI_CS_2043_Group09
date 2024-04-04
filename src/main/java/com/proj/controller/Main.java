@@ -10,6 +10,17 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import com.proj.model.dtos.BankBranchDTO;
+import com.proj.model.dtos.RoleDTO;
+import com.proj.model.entities.AddressEntity;
+import com.proj.model.entities.BankBranchEntity;
+import com.proj.model.entities.RoleEntity;
+import com.proj.model.mappers.AddressMapper;
+import com.proj.model.mappers.BankBranchMapper;
+import com.proj.model.mappers.RoleMapper;
+import com.proj.model.repositories.BankBranchRepository;
+import com.proj.model.repositories.RoleRepository;
+import com.proj.model.services.AddressService;
 import com.proj.model.services.ClientSearchService;
 import com.proj.model.services.ClientService;
 import com.proj.view.CommandLineInterface;
@@ -27,11 +38,23 @@ public class Main implements CommandLineRunner {
     private ClientSearchService clientSearchService;
 
     private ClientService clientService;
+
+    private AddressService addressService;
+    
+    private BankBranchRepository bankBranchRepository;
+
+    private RoleRepository roleRepository;
     
     @Autowired
-    public Main(ClientSearchService clientSearchService, ClientService clientService) {
+    public Main(
+        ClientSearchService clientSearchService, ClientService clientService, AddressService addressService, BankBranchRepository bankBranchRepository,
+        RoleRepository roleRepository
+    ) {
         this.clientSearchService = clientSearchService;
         this.clientService = clientService;
+        this.addressService = addressService;
+        this.bankBranchRepository = bankBranchRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -51,8 +74,20 @@ public class Main implements CommandLineRunner {
      */
     @Override
     public void run(String... args) {
+        if(Arrays.asList(args).contains("demo")) {
+            System.out.println("Demonstrative insertions");
+            //...
+        }
+
         if(Arrays.asList(args).contains("run")) {
-            CommandLineInterface currentProgram = new CommandLineInterface(clientService, clientSearchService);
+            AddressEntity defaultAddress = AddressMapper.INSTANCE.dtoToEntity(addressService.createAddress(
+                "branch l1", "branch l2", "Branch st", "Branch city", "Branch province", "Demo country"
+            ));
+            BankBranchDTO defaultBankBranch = BankBranchMapper.INSTANCE.entityToDto(bankBranchRepository.save(new BankBranchEntity(null, defaultAddress, "Demo bank branch")));
+            RoleDTO defaultClient = RoleMapper.INSTANCE.entityToDto(
+                roleRepository.save(new RoleEntity(null, "Demonstration client role", "This is a demonstration"))
+            );
+            CommandLineInterface currentProgram = new CommandLineInterface(clientService, clientSearchService, defaultBankBranch, defaultClient, addressService);
             currentProgram.start();
         }
         return;

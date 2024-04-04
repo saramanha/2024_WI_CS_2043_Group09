@@ -1,20 +1,40 @@
 package com.proj.view;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+
+import org.springframework.format.datetime.joda.LocalDateParser;
+
+import com.proj.model.services.AddressService;
 import com.proj.model.services.Client;
 import com.proj.model.services.ClientSearchService;
 import com.proj.model.services.ClientService;
+import com.proj.model.dtos.AddressDTO;
+import com.proj.model.dtos.AgentInformationDTO;
+import com.proj.model.dtos.BankBranchDTO;
+import com.proj.model.dtos.GenderDTO;
+import com.proj.model.dtos.RoleDTO;
+import com.proj.model.entities.AddressEntity;
 import com.proj.model.exceptions.ClientServiceException;
 
 public class CommandLineInterface {
     private ClientService clientService;
     private ClientSearchService clientSearchService;
     private Scanner scanner;
+    private BankBranchDTO defaultBankBranch;
+    private RoleDTO defaultClient;
+    private AddressService addressService;
 
-    public CommandLineInterface(ClientService clientService, ClientSearchService clientSearchService) {
+    public CommandLineInterface(
+        ClientService clientService, ClientSearchService clientSearchService, BankBranchDTO defaultBankBranch, RoleDTO defaultClient, AddressService addressService
+    ) {
+        this.addressService = addressService;
         this.clientService = clientService;
         this.clientSearchService = clientSearchService;
         this.scanner = new Scanner(System.in);
+        this.defaultBankBranch = defaultBankBranch;
+        this.defaultClient = defaultClient;
     }
 
     public void start() {
@@ -23,6 +43,7 @@ public class CommandLineInterface {
         boolean exit = false;
         while (!exit) {
             System.out.println("\nChoose an option:");
+            System.out.println("0. Create Client Information");
             System.out.println("1. Update Client Information");
             System.out.println("2. Add Bank Account");
             System.out.println("3. Generate Reports");
@@ -32,6 +53,9 @@ public class CommandLineInterface {
             scanner.nextLine(); 
 
             switch (choice) {
+                case 0:
+                    createClientInformation();
+                    break;
                 case 1:
                     updateClientInformation();
                     break;
@@ -51,6 +75,63 @@ public class CommandLineInterface {
         }
     }
 
+    private void createClientInformation() {
+        System.out.println("Enter the first name:");
+        String firstName = scanner.nextLine();
+        System.out.println("Enter the last name");
+        String lastName = scanner.nextLine();
+        System.out.println("Enter the middle name");
+        String middleName = scanner.nextLine();
+        String additionalNames = "";
+        System.out.println("Enter the email");
+        String email = scanner.nextLine();
+        System.out.println("Enter the biological sex (M/F)");
+        char sex = scanner.nextLine().charAt(0);
+        System.out.println("Enter the date of birth in format YYYY-MM-DD");
+        String date = scanner.nextLine();
+        LocalDate dateOfBirth = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        LocalDate dateOfRegistration = LocalDate.now();
+        GenderDTO gender_info = new GenderDTO();
+        System.out.println("Enter clients gender");
+        gender_info.setName(scanner.nextLine());
+
+        AddressDTO[] address_info = new AddressDTO[2];
+        address_info[0] = new AddressDTO();
+        address_info[1] = new AddressDTO();
+        for(int i = 0; i < 2; i++) {
+            System.out.println("Enter address line 1");
+            String l1 = scanner.nextLine();
+            System.out.println("Enter address line 2");
+            String l2 = scanner.nextLine();
+            System.out.println("Enter the street name");
+            String street = scanner.nextLine();
+            System.out.println("Enter the city name");
+            String city = scanner.nextLine();
+            System.out.println("Enter the province name");
+            String province = scanner.nextLine();
+            System.out.println("Enter the country name");
+            String country = scanner.nextLine();
+            address_info[i] = addressService.createAddress(l1, l2, street, city, province, country);
+            if(i == 0) {
+                System.out.println("Is the secondary address same as the primary?");
+                boolean answer = scanner.nextBoolean();
+                if(answer) {
+                    address_info[1] = address_info[0];
+                    break;
+                }
+            }
+        }
+
+        System.out.println("Enter the social security number");
+        Long socialSecurityNumber = scanner.nextLong();
+
+        System.out.println("Creating the client with the given information...");
+        Client current_client = clientService.createNewClient(
+            firstName, lastName, middleName, additionalNames, address_info[0], address_info[1], email,
+            gender_info, sex, defaultBankBranch, dateOfBirth, dateOfRegistration, socialSecurityNumber, defaultClient 
+        );
+        System.out.println(String.format("Successfuly created a client with %d id", current_client.getPersonalInfo().getId()));
+    }
 
     private void updateClientInformation() {
         System.out.println("Enter client ID:");
@@ -58,6 +139,7 @@ public class CommandLineInterface {
         scanner.nextLine();
     
         System.out.println("Choose information to update:");
+        System.out.println("0. Cancel");
         System.out.println("1. First Name");
         System.out.println("2. Last Name");
         System.out.println("3. Primary Address");
@@ -74,6 +156,9 @@ public class CommandLineInterface {
             Client client = clientSearchService.findClientById(clientId);
             if (client != null) {
                 switch (updateChoice) {
+                    case 0:
+                        System.out.println("Operation cancelled");
+                        break;
                     case 1:
                         System.out.println("Enter new first name:");
                         String newFirstName = scanner.nextLine();
@@ -138,7 +223,7 @@ public class CommandLineInterface {
                         System.out.println("Invalid choice. Please try again.");
                 }
                 System.out.println("Updated Client Information:");
-                System.out.println(client);
+                // System.out.println(client);
             } else {
                 System.out.println("Client not found.");
             }
@@ -182,6 +267,7 @@ public class CommandLineInterface {
             Client client = clientSearchService.findClientById(clientId);
             if (client != null) {
                 System.out.println("Choose a report to generate:");
+                System.out.println("0. Cancel operation");
                 System.out.println("1. Transaction Report");
                 System.out.println("2. Deposit Report");
                 System.out.println("3. Withdrawal Report");
@@ -190,6 +276,9 @@ public class CommandLineInterface {
                 scanner.nextLine(); 
 
                 switch (reportChoice) {
+                    case 0:
+                        System.out.println("Operation cancelled");
+                        break;
                     case 1:
                         String transactionReport = clientService.generateTransactionReport(client);
                         System.out.println(transactionReport);

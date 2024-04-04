@@ -133,4 +133,66 @@ public class DutyHistoryDTO {
     public void setAgent(AgentInformationDTO agent) {
         this.agent = agent;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((dateTimeInitiated == null) ? 0 : dateTimeInitiated.hashCode());
+        result = prime * result + ((dateTimeSignoff == null) ? 0 : dateTimeSignoff.hashCode());
+        result = prime * result + ((bankBranch == null) ? 0 : bankBranch.hashCode());
+        result = prime * result + ((dutyNotes == null) ? 0 : dutyNotes.hashCode());
+        result = prime * result + ((agent == null) ? 0 : agent.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DutyHistoryDTO other = (DutyHistoryDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (dateTimeInitiated == null) {
+            if (other.dateTimeInitiated != null)
+                return false;
+        } else if (!dateTimeInitiated.equals(other.dateTimeInitiated))
+            return false;
+        if (dateTimeSignoff == null) {
+            if (other.dateTimeSignoff != null)
+                return false;
+        } else if (!dateTimeSignoff.equals(other.dateTimeSignoff))
+            return false;
+        if (bankBranch == null) {
+            if (other.bankBranch != null)
+                return false;
+        } else if (!bankBranch.equals(other.bankBranch))
+            return false;
+        if (dutyNotes == null) {
+            if (other.dutyNotes != null)
+                return false;
+        } else if (!dutyNotes.equals(other.dutyNotes))
+            return false;
+        if (agent == null) {
+            if (other.agent != null)
+                return false;
+        } else if (!agent.equals(other.agent))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "DutyHistoryDTO [id=" + id + ", dateTimeInitiated=" + dateTimeInitiated + ", dateTimeSignoff="
+                + dateTimeSignoff + ", bankBranch=" + bankBranch + ", dutyNotes=" + dutyNotes + ", agent=" + agent
+                + "]";
+    }
 }

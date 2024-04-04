@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,7 +124,7 @@ public class ClientService {
     public Client updateFirstName(Client client, String newName) {
         try {
             AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
-                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found"));
             personalInfoE.setFirstName(newName);
             client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
             return client;
@@ -149,7 +150,7 @@ public class ClientService {
     public Client updateMiddleName(Client client, String newMiddleName) {
         try {
             AgentInformationEntity personalInfoE = agentInfoRepo.findById(client.getPersonalInfo().getId())
-                    .orElseThrow(() -> new ClientNotFoundException("Client not found"));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found"));
             personalInfoE.setMiddleName(newMiddleName);
             client.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(personalInfoE)));
             return client;
@@ -391,25 +392,24 @@ public class ClientService {
     public Client createNewClient(String firstName, String lastName, String middleName, String additionalNames,
                                   AddressDTO primaryAddress, AddressDTO secondaryAddress, String email,
                                   GenderDTO gender, char sex, BankBranchDTO bankBranch,
-                                  LocalDate dateOfBirth, Long SocialSecurityNumber, RoleDTO clientRole) {
-        
+                                  LocalDate dateOfBirth, LocalDate dateOfRegistration, Long SocialSecurityNumber, RoleDTO clientRole) {
         AddressEntity primaryAddressEntity = AddressMapper.INSTANCE.dtoToEntity(primaryAddress);
-        if(!addressRepo.existsById(primaryAddressEntity.getId())) addressRepo.save(primaryAddressEntity);
+        primaryAddressEntity = addressRepo.findOne(Example.of(primaryAddressEntity)).orElse(addressRepo.save(primaryAddressEntity));
         
         AddressEntity secondaryAddressEntity = AddressMapper.INSTANCE.dtoToEntity(secondaryAddress);
-        if(!addressRepo.existsById(secondaryAddressEntity.getId())) addressRepo.save(secondaryAddressEntity);
+        secondaryAddressEntity = addressRepo.findOne(Example.of(secondaryAddressEntity)).orElse(addressRepo.save(secondaryAddressEntity));
         
         GenderEntity genderEntity = GenderMapper.INSTANCE.dtoToEntity(gender);
-        if(!genderRepo.existsById(genderEntity.getId())) genderRepo.save(genderEntity);
+        genderEntity = genderRepo.findOne(Example.of(genderEntity)).orElse(genderRepo.save(genderEntity));
 
         BankBranchEntity bankBranchEntity = BankBranchMapper.INSTANCE.dtoToEntity(bankBranch);
-        if(!bankBranchRepo.existsById(bankBranchEntity.getId())) bankBranchRepo.save(bankBranchEntity);
+        bankBranchEntity = bankBranchRepo.findOne(Example.of(bankBranchEntity)).orElse(bankBranchRepo.save(bankBranchEntity));
 
         RoleEntity roleEntity = RoleMapper.INSTANCE.dtoToEntity(clientRole);
-        if(!roleRepo.existsById(roleEntity.getId())) roleRepo.save(roleEntity);
+        roleEntity = roleRepo.findOne(Example.of(roleEntity)).orElse(roleRepo.save(roleEntity));
         
         AgentInformationEntity currentAgent = new AgentInformationEntity(
-            null, firstName, lastName, middleName, additionalNames, LocalDate.now(), primaryAddressEntity, secondaryAddressEntity,
+            null, firstName, lastName, middleName, additionalNames, dateOfRegistration, primaryAddressEntity, secondaryAddressEntity,
             email, genderEntity, sex, dateOfBirth, SocialSecurityNumber, bankBranchEntity, roleEntity
         );
 
@@ -417,6 +417,7 @@ public class ClientService {
         newClient.setPersonalInfo(AgentInformationMapper.INSTANCE.entityToDto(agentInfoRepo.save(currentAgent)));
         return newClient;
     }
+
     // Function to generate a transaction report
     public String generateTransactionReport(Client client) {
         StringBuilder report = new StringBuilder();

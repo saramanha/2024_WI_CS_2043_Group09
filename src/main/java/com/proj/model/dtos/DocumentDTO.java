@@ -1,5 +1,7 @@
 package com.proj.model.dtos;
 
+import java.util.Arrays;
+
 public class DocumentDTO {
     private Long id;
     private DocumentTypeDTO documentType;
@@ -97,5 +99,51 @@ public class DocumentDTO {
      */
     public void setContent(byte[] content) {
         this.content = content;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((documentType == null) ? 0 : documentType.hashCode());
+        result = prime * result + ((agent == null) ? 0 : agent.hashCode());
+        result = prime * result + Arrays.hashCode(content);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DocumentDTO other = (DocumentDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (documentType == null) {
+            if (other.documentType != null)
+                return false;
+        } else if (!documentType.equals(other.documentType))
+            return false;
+        if (agent == null) {
+            if (other.agent != null)
+                return false;
+        } else if (!agent.equals(other.agent))
+            return false;
+        if (!Arrays.equals(content, other.content))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "DocumentDTO [id=" + id + ", documentType=" + documentType + ", agent=" + agent + ", content="
+                + Arrays.toString(content) + "]";
     }
 }

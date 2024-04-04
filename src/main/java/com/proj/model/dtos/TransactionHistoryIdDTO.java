@@ -51,4 +51,40 @@ public class TransactionHistoryIdDTO {
     public void setDepositId(Long depositId) {
         this.depositId = depositId;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((withdrawalId == null) ? 0 : withdrawalId.hashCode());
+        result = prime * result + ((depositId == null) ? 0 : depositId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TransactionHistoryIdDTO other = (TransactionHistoryIdDTO) obj;
+        if (withdrawalId == null) {
+            if (other.withdrawalId != null)
+                return false;
+        } else if (!withdrawalId.equals(other.withdrawalId))
+            return false;
+        if (depositId == null) {
+            if (other.depositId != null)
+                return false;
+        } else if (!depositId.equals(other.depositId))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionHistoryIdDTO [withdrawalId=" + withdrawalId + ", depositId=" + depositId + "]";
+    }
 }

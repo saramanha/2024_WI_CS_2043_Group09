@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -148,9 +147,9 @@ public class BankAccountService {
                                                                 depositCurrency, 
                                                                 finalSum, 
                                                                 LocalDateTime.now());
-        depositRecord = depositHistoryRepo.saveAndFlush(depositRecord);
+        depositRecord = depositHistoryRepo.save(depositRecord);
         bankAccEntity.setBankSum(bankAccEntity.getBankSum().add(finalSum));
-        accountInformationRepo.saveAndFlush(bankAccEntity);
+        accountInformationRepo.save(bankAccEntity);
 
         return DepositHistoryMapper.INSTANCE.entityToDto(depositRecord);
     }
@@ -194,14 +193,13 @@ public class BankAccountService {
                                                                     withdrawalCurrency, 
                                                                     finalSum, 
                                                                     LocalDateTime.now());
-        withdrawalRecord = withdrawalHistoryRepo.saveAndFlush(withdrawalRecord);
+        withdrawalRecord = withdrawalHistoryRepo.save(withdrawalRecord);
         bankAccEntity.setBankSum(bankAccEntity.getBankSum().subtract(finalSum));
-        accountInformationRepo.saveAndFlush(bankAccEntity);
+        accountInformationRepo.save(bankAccEntity);
 
         return WithdrawalHistoryMapper.INSTANCE.entityToDto(withdrawalRecord);
     }
 
-    
     @Transactional
     public TransactionHistoryDTO processTransaction(Long fromBankAccountId, Long fromClientId, Long toBankAccountId, Long toClientId, BigDecimal sum) 
     throws BankAccountException, AccountInactiveException, InsufficientFundsException {
@@ -276,6 +274,28 @@ public class BankAccountService {
         return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.findById(bankAccountId).get());
     }
 
+    // public AccountInformationDTO changeCurrency(Long bankAccountId, Long currencyId) {
+    //     return null;
+    // }
+
+    @Transactional
+    public AccountInformationDTO deactivate(Long bankAccountId) throws BankAccountException {
+        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+            () -> (getBankAccountInfoNotFound())
+            );
+            bankAccount.setIsActive(false);
+            return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
+        }
+        
+        @Transactional
+        public AccountInformationDTO activate(Long bankAccountId) throws BankAccountException {
+            AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
+        () -> getBankAccountInfoNotFound()
+        );
+        bankAccount.setIsActive(true);
+        return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
+    }
+    
     public List<AgentInformationDTO> getOwners(Long bankAccountId) throws BankAccountException {
         AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
             () -> (getBankAccountInfoNotFound())
@@ -287,47 +307,26 @@ public class BankAccountService {
         }
         return result;
     }
-    
-    // public AccountInformationDTO changeCurrency(Long bankAccountId, Long currencyId) {
-    //     return null;
-    // }
-    @Transactional
-    public AccountInformationDTO deactivate(Long bankAccountId) throws BankAccountException {
-        AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
-            () -> (getBankAccountInfoNotFound())
-        );
-        bankAccount.setIsActive(false);
-        return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
-    }
-    
-    @Transactional
-    public AccountInformationDTO activate(Long bankAccountId) throws BankAccountException {
-    AccountInformationEntity bankAccount = accountInformationRepo.findById(bankAccountId).orElseThrow(
-        () -> getBankAccountInfoNotFound()
-    );
-        bankAccount.setIsActive(true);
-        return AccountInformationMapper.INSTANCE.entityToDto(accountInformationRepo.save(bankAccount));
-    }
 
     public List<TransactionHistoryDTO> getTransactionHistory(Long bankAccountId) throws BankAccountException {
         AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
             () -> getBankAccountInfoNotFound()
-        );
-        List<TransactionHistoryEntity> search_result = transactionHistoryRepo.findAllByDepositAccountInformationIdOrWithdrawalAccountInformationId(bankAccountEntity.getId());
-        ArrayList<TransactionHistoryDTO> result = new ArrayList<>();
-
-        for (TransactionHistoryEntity e : search_result) {
-            result.add(TransactionHistoryMapper.INSTANCE.entityToDto(e));
+            );
+            List<TransactionHistoryEntity> search_result = transactionHistoryRepo.findAllByDepositAccountInformationIdOrWithdrawalAccountInformationId(bankAccountEntity.getId());
+            ArrayList<TransactionHistoryDTO> result = new ArrayList<>();
+            
+            for (TransactionHistoryEntity e : search_result) {
+                result.add(TransactionHistoryMapper.INSTANCE.entityToDto(e));
+            }
+            return result;
         }
-        return result;
-    }
-    
-    public List<DepositHistoryDTO> getDepositHistory(Long bankAccountId) throws BankAccountException {
-        AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
-            () -> getBankAccountInfoNotFound()
-        );
-        List<DepositHistoryEntity> search_result = depositHistoryRepo.findAllByAccountInformationId(bankAccountEntity.getId());
-        ArrayList<DepositHistoryDTO> result = new ArrayList<>();
+        
+        public List<DepositHistoryDTO> getDepositHistory(Long bankAccountId) throws BankAccountException {
+            AccountInformationEntity bankAccountEntity = accountInformationRepo.findById(bankAccountId).orElseThrow(
+                () -> getBankAccountInfoNotFound()
+                );
+                List<DepositHistoryEntity> search_result = depositHistoryRepo.findAllByAccountInformationId(bankAccountEntity.getId());
+                ArrayList<DepositHistoryDTO> result = new ArrayList<>();
 
         for (DepositHistoryEntity e : search_result) {
             result.add(DepositHistoryMapper.INSTANCE.entityToDto(e));
