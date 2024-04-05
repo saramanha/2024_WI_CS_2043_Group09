@@ -1,5 +1,7 @@
 package com.proj.model.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -38,12 +40,38 @@ public class AddressService {
         ProvinceEntity province = new ProvinceEntity(null, provinceName);
         CountryEntity country = new CountryEntity(null, countryName);
 
-        city = cityRepository.findOne(Example.of(city)).orElse(cityRepository.save(city));
-        province = provinceRepository.findOne(Example.of(province)).orElse(provinceRepository.save(province));
-        country = countryRepository.findOne(Example.of(country)).orElse(countryRepository.save(country));
+        Optional<CityEntity> optionalCity = cityRepository.findOne(Example.of(city));
+        if(optionalCity.isPresent()) {
+            city = optionalCity.get();
+        }
+        else {
+            city = cityRepository.save(city);
+        }
 
+        Optional<ProvinceEntity> optionalProvince = provinceRepository.findOne(Example.of(province));
+        if(optionalProvince.isPresent()) {
+            province = optionalProvince.get();
+        }
+        else {
+            province = provinceRepository.save(province);
+        }
+
+        Optional<CountryEntity> optionalCountry = countryRepository.findOne(Example.of(country));
+        if(optionalCountry.isPresent()) {
+            country = optionalCountry.get();
+        }
+        else {
+            country = countryRepository.save(country);
+        }
+        
         AddressEntity newAddress = new AddressEntity(null, l1, l2, streetName, city, province, country);
-        newAddress = addressRepository.findOne(Example.of(newAddress)).orElse(addressRepository.save(newAddress));
+        Optional<AddressEntity> optionalNewAddress = addressRepository.findOne(Example.of(newAddress));
+        if(optionalNewAddress.isPresent()) {
+            newAddress = optionalNewAddress.get();
+        }
+        else {
+            newAddress = addressRepository.save(newAddress);
+        }
 
         return AddressMapper.INSTANCE.entityToDto(newAddress);
     }
