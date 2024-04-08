@@ -113,7 +113,7 @@ public class CommandLineInterface {
             String country = scanner.nextLine();
             address_info[i] = addressService.createAddress(l1, l2, street, city, province, country);
             if(i == 0) {
-                System.out.println("Is the secondary address same as the primary?");
+                System.out.println("Is the secondary address same as the primary? (true/false)");
                 boolean answer = scanner.nextBoolean();
                 if(answer) {
                     address_info[1] = address_info[0];
