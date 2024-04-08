@@ -14,6 +14,7 @@ import com.proj.model.dtos.BankBranchDTO;
 import com.proj.model.dtos.RoleDTO;
 import com.proj.model.entities.AddressEntity;
 import com.proj.model.entities.BankBranchEntity;
+import com.proj.model.entities.CurrencyEntity;
 import com.proj.model.entities.RoleEntity;
 import com.proj.model.mappers.AddressMapper;
 import com.proj.model.mappers.BankBranchMapper;
@@ -76,7 +77,20 @@ public class Main implements CommandLineRunner {
     public void run(String... args) {
         if(Arrays.asList(args).contains("demo")) {
             System.out.println("Demonstrative insertions");
-            //...
+            AddressEntity demoAddress = AddressMapper.INSTANCE.dtoToEntity(
+                addressService.createAddress(
+                "Demo address line 1", 
+                "Demo address line 2",
+                "Demo address street name",
+                "Demo address city name",
+                "Demo address province name",
+                "Demo address country name")
+            );
+
+            System.out.println("Inserted an address: ".concat(demoAddress.toString()));
+
+            CurrencyEntity demoCurrency = new CurrencyEntity(null, "Demo currency 1", "DC1");
+            
         }
 
         if(Arrays.asList(args).contains("run")) {
