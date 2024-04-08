@@ -3,8 +3,10 @@
 package com.proj.model.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.swing.text.html.Option;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -394,19 +396,49 @@ public class ClientService {
                                   GenderDTO gender, char sex, BankBranchDTO bankBranch,
                                   LocalDate dateOfBirth, LocalDate dateOfRegistration, Long SocialSecurityNumber, RoleDTO clientRole) {
         AddressEntity primaryAddressEntity = AddressMapper.INSTANCE.dtoToEntity(primaryAddress);
-        primaryAddressEntity = addressRepo.findOne(Example.of(primaryAddressEntity)).orElse(addressRepo.save(primaryAddressEntity));
+        Optional<AddressEntity> maybePrimaryAddress = addressRepo.findOne(Example.of(primaryAddressEntity));
+        if(maybePrimaryAddress.isPresent()) {
+            primaryAddressEntity = maybePrimaryAddress.get();
+        } 
+        else {
+            primaryAddressEntity = addressRepo.save(primaryAddressEntity);
+        }
         
         AddressEntity secondaryAddressEntity = AddressMapper.INSTANCE.dtoToEntity(secondaryAddress);
-        secondaryAddressEntity = addressRepo.findOne(Example.of(secondaryAddressEntity)).orElse(addressRepo.save(secondaryAddressEntity));
+        Optional<AddressEntity> maybeSecondaryAddress = addressRepo.findOne(Example.of(secondaryAddressEntity));
+        if(maybeSecondaryAddress.isPresent()) {
+            secondaryAddressEntity = maybeSecondaryAddress.get();
+        }
+        else {
+            secondaryAddressEntity = addressRepo.save(secondaryAddressEntity);
+        }
         
         GenderEntity genderEntity = GenderMapper.INSTANCE.dtoToEntity(gender);
-        genderEntity = genderRepo.findOne(Example.of(genderEntity)).orElse(genderRepo.save(genderEntity));
+        Optional<GenderEntity> maybeGenderEntity = genderRepo.findOne(Example.of(genderEntity));
+        if(maybeGenderEntity.isPresent()) {
+            genderEntity = maybeGenderEntity.get();
+        }
+        else {
+            genderEntity = genderRepo.save(genderEntity);
+        }
 
         BankBranchEntity bankBranchEntity = BankBranchMapper.INSTANCE.dtoToEntity(bankBranch);
-        bankBranchEntity = bankBranchRepo.findOne(Example.of(bankBranchEntity)).orElse(bankBranchRepo.save(bankBranchEntity));
+        Optional<BankBranchEntity> maybeBankBranch = bankBranchRepo.findOne(Example.of(bankBranchEntity));
+        if(maybeBankBranch.isPresent()) {
+            bankBranchEntity = maybeBankBranch.get();
+        }
+        else {
+            bankBranchEntity = bankBranchRepo.save(bankBranchEntity);
+        }
 
         RoleEntity roleEntity = RoleMapper.INSTANCE.dtoToEntity(clientRole);
-        roleEntity = roleRepo.findOne(Example.of(roleEntity)).orElse(roleRepo.save(roleEntity));
+        Optional<RoleEntity> maybeRoleEntity = roleRepo.findOne(Example.of(roleEntity));
+        if(maybeRoleEntity.isPresent()) {
+            roleEntity = maybeRoleEntity.get();
+        }
+        else {
+            roleEntity = roleRepo.save(roleEntity);
+        }
         
         AgentInformationEntity currentAgent = new AgentInformationEntity(
             null, firstName, lastName, middleName, additionalNames, dateOfRegistration, primaryAddressEntity, secondaryAddressEntity,
