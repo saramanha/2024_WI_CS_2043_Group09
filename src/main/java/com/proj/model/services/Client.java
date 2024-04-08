@@ -1,7 +1,6 @@
 package com.proj.model.services;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.proj.model.dtos.AccountInformationDTO;
 import com.proj.model.dtos.AgentInformationDTO;
@@ -17,6 +16,16 @@ public class Client {
     private ArrayList<WithdrawalHistoryDTO> associatedWithdrawals;
 
     public Client() {}
+
+    public Client(AgentInformationDTO personalInfo, ArrayList<AccountInformationDTO> associatedBankAccounts,
+            ArrayList<TransactionHistoryDTO> associatedTransactions, ArrayList<DepositHistoryDTO> associatedDeposits,
+            ArrayList<WithdrawalHistoryDTO> associatedWithdrawals) {
+        this.personalInfo = personalInfo;
+        this.associatedBankAccounts = associatedBankAccounts;
+        this.associatedTransactions = associatedTransactions;
+        this.associatedDeposits = associatedDeposits;
+        this.associatedWithdrawals = associatedWithdrawals;
+    }
 
     public AgentInformationDTO getPersonalInfo() {
         return personalInfo;

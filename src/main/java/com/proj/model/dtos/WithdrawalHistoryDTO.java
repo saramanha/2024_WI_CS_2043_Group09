@@ -173,4 +173,79 @@ public class WithdrawalHistoryDTO {
     public void setDateTimeInitiated(LocalDateTime dateTimeInitiated) {
         this.dateTimeInitiated = dateTimeInitiated;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((agent == null) ? 0 : agent.hashCode());
+        result = prime * result + ((accountInformation == null) ? 0 : accountInformation.hashCode());
+        result = prime * result + ((transactionStatus == null) ? 0 : transactionStatus.hashCode());
+        result = prime * result + ((sumInitial == null) ? 0 : sumInitial.hashCode());
+        result = prime * result + ((withdrawalCurrency == null) ? 0 : withdrawalCurrency.hashCode());
+        result = prime * result + ((sumConverted == null) ? 0 : sumConverted.hashCode());
+        result = prime * result + ((dateTimeInitiated == null) ? 0 : dateTimeInitiated.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        WithdrawalHistoryDTO other = (WithdrawalHistoryDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (agent == null) {
+            if (other.agent != null)
+                return false;
+        } else if (!agent.equals(other.agent))
+            return false;
+        if (accountInformation == null) {
+            if (other.accountInformation != null)
+                return false;
+        } else if (!accountInformation.equals(other.accountInformation))
+            return false;
+        if (transactionStatus == null) {
+            if (other.transactionStatus != null)
+                return false;
+        } else if (!transactionStatus.equals(other.transactionStatus))
+            return false;
+        if (sumInitial == null) {
+            if (other.sumInitial != null)
+                return false;
+        } else if (!sumInitial.equals(other.sumInitial))
+            return false;
+        if (withdrawalCurrency == null) {
+            if (other.withdrawalCurrency != null)
+                return false;
+        } else if (!withdrawalCurrency.equals(other.withdrawalCurrency))
+            return false;
+        if (sumConverted == null) {
+            if (other.sumConverted != null)
+                return false;
+        } else if (!sumConverted.equals(other.sumConverted))
+            return false;
+        if (dateTimeInitiated == null) {
+            if (other.dateTimeInitiated != null)
+                return false;
+        } else if (!dateTimeInitiated.equals(other.dateTimeInitiated))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "WithdrawalHistoryDTO [id=" + id + ", agent=" + agent + ", accountInformation=" + accountInformation
+                + ", transactionStatus=" + transactionStatus + ", sumInitial=" + sumInitial + ", withdrawalCurrency="
+                + withdrawalCurrency + ", sumConverted=" + sumConverted + ", dateTimeInitiated=" + dateTimeInitiated
+                + "]";
+    }
 }

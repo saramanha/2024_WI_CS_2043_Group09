@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * Represents the entity mapping for a country.
  */
 @Entity
-@Table(name = "county")
+@Table(name = "country")
 public class CountryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

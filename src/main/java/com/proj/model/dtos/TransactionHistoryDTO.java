@@ -153,6 +153,76 @@ public class TransactionHistoryDTO {
     public void setTransactionClosureDateTime(LocalDateTime transactionClosureDateTime) {
         this.transactionClosureDateTime = transactionClosureDateTime;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((deposit == null) ? 0 : deposit.hashCode());
+        result = prime * result + ((withdrawal == null) ? 0 : withdrawal.hashCode());
+        result = prime * result + ((transactionType == null) ? 0 : transactionType.hashCode());
+        result = prime * result + ((transactionStatus == null) ? 0 : transactionStatus.hashCode());
+        result = prime * result
+                + ((transactionInitiationDateTime == null) ? 0 : transactionInitiationDateTime.hashCode());
+        result = prime * result + ((transactionClosureDateTime == null) ? 0 : transactionClosureDateTime.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TransactionHistoryDTO other = (TransactionHistoryDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (deposit == null) {
+            if (other.deposit != null)
+                return false;
+        } else if (!deposit.equals(other.deposit))
+            return false;
+        if (withdrawal == null) {
+            if (other.withdrawal != null)
+                return false;
+        } else if (!withdrawal.equals(other.withdrawal))
+            return false;
+        if (transactionType == null) {
+            if (other.transactionType != null)
+                return false;
+        } else if (!transactionType.equals(other.transactionType))
+            return false;
+        if (transactionStatus == null) {
+            if (other.transactionStatus != null)
+                return false;
+        } else if (!transactionStatus.equals(other.transactionStatus))
+            return false;
+        if (transactionInitiationDateTime == null) {
+            if (other.transactionInitiationDateTime != null)
+                return false;
+        } else if (!transactionInitiationDateTime.equals(other.transactionInitiationDateTime))
+            return false;
+        if (transactionClosureDateTime == null) {
+            if (other.transactionClosureDateTime != null)
+                return false;
+        } else if (!transactionClosureDateTime.equals(other.transactionClosureDateTime))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionHistoryDTO [id=" + id + ", deposit=" + deposit + ", withdrawal=" + withdrawal
+                + ", transactionType=" + transactionType + ", transactionStatus=" + transactionStatus
+                + ", transactionInitiationDateTime=" + transactionInitiationDateTime + ", transactionClosureDateTime="
+                + transactionClosureDateTime + "]";
+    }
 }
 
 

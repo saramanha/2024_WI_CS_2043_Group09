@@ -146,4 +146,66 @@ public class CurrencyConversionDTO {
     public void setEffectiveDateTime(LocalDateTime effectiveDateTime) {
         this.effectiveDateTime = effectiveDateTime;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((fromCurrency == null) ? 0 : fromCurrency.hashCode());
+        result = prime * result + ((toCurrency == null) ? 0 : toCurrency.hashCode());
+        result = prime * result + ((multRateDenominator == null) ? 0 : multRateDenominator.hashCode());
+        result = prime * result + ((multRateNumerator == null) ? 0 : multRateNumerator.hashCode());
+        result = prime * result + ((effectiveDateTime == null) ? 0 : effectiveDateTime.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CurrencyConversionDTO other = (CurrencyConversionDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (fromCurrency == null) {
+            if (other.fromCurrency != null)
+                return false;
+        } else if (!fromCurrency.equals(other.fromCurrency))
+            return false;
+        if (toCurrency == null) {
+            if (other.toCurrency != null)
+                return false;
+        } else if (!toCurrency.equals(other.toCurrency))
+            return false;
+        if (multRateDenominator == null) {
+            if (other.multRateDenominator != null)
+                return false;
+        } else if (!multRateDenominator.equals(other.multRateDenominator))
+            return false;
+        if (multRateNumerator == null) {
+            if (other.multRateNumerator != null)
+                return false;
+        } else if (!multRateNumerator.equals(other.multRateNumerator))
+            return false;
+        if (effectiveDateTime == null) {
+            if (other.effectiveDateTime != null)
+                return false;
+        } else if (!effectiveDateTime.equals(other.effectiveDateTime))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CurrencyConversionDTO [id=" + id + ", fromCurrency=" + fromCurrency + ", toCurrency=" + toCurrency
+                + ", multRateDenominator=" + multRateDenominator + ", multRateNumerator=" + multRateNumerator
+                + ", effectiveDateTime=" + effectiveDateTime + "]";
+    }
 }

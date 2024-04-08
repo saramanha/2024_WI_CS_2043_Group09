@@ -6,3 +6,5 @@ myDatabase
 target
 *.class
 log
+CLI
+.gitignore

@@ -102,4 +102,53 @@ public class Client_AccountJunctionDTO {
     public void setRelationshipDescription(String relationshipDescription) {
         this.relationshipDescription = relationshipDescription;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((agent == null) ? 0 : agent.hashCode());
+        result = prime * result + ((account == null) ? 0 : account.hashCode());
+        result = prime * result + ((relationshipDescription == null) ? 0 : relationshipDescription.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Client_AccountJunctionDTO other = (Client_AccountJunctionDTO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (agent == null) {
+            if (other.agent != null)
+                return false;
+        } else if (!agent.equals(other.agent))
+            return false;
+        if (account == null) {
+            if (other.account != null)
+                return false;
+        } else if (!account.equals(other.account))
+            return false;
+        if (relationshipDescription == null) {
+            if (other.relationshipDescription != null)
+                return false;
+        } else if (!relationshipDescription.equals(other.relationshipDescription))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Client_AccountJunctionDTO [id=" + id + ", agent=" + agent + ", account=" + account
+                + ", relationshipDescription=" + relationshipDescription + "]";
+    }
 }

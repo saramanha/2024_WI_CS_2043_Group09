@@ -59,4 +59,40 @@ public class CurrencyConversionIdDTO {
     public void setToCurrencyId(Long toCurrencyId) {
         this.toCurrencyId = toCurrencyId;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((fromCurrencyId == null) ? 0 : fromCurrencyId.hashCode());
+        result = prime * result + ((toCurrencyId == null) ? 0 : toCurrencyId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CurrencyConversionIdDTO other = (CurrencyConversionIdDTO) obj;
+        if (fromCurrencyId == null) {
+            if (other.fromCurrencyId != null)
+                return false;
+        } else if (!fromCurrencyId.equals(other.fromCurrencyId))
+            return false;
+        if (toCurrencyId == null) {
+            if (other.toCurrencyId != null)
+                return false;
+        } else if (!toCurrencyId.equals(other.toCurrencyId))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CurrencyConversionIdDTO [fromCurrencyId=" + fromCurrencyId + ", toCurrencyId=" + toCurrencyId + "]";
+    }
 }
